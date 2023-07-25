@@ -66,7 +66,7 @@ export default function AddProducts() {
                 break;
               case 'running':
                 console.log('Upload is running');
-                break;
+                break; 
             }
           },
           (error) => {
@@ -96,7 +96,6 @@ export default function AddProducts() {
   // ----------Handle Submit---------
   const handleSubmit = async(e,imgUrl) => {
     e.preventDefault();
-    uploadImageToStorage();
     // const storage = getStorage();
     // const storageRef = ref(storage, `images/${image.name + Math.random().toString(10).slice(2)}`);
 
