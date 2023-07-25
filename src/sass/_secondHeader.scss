@@ -1,0 +1,18 @@
+.secondHeader {
+
+    .nav-link {
+        // Styles for nav-link
+    color: rgba(88, 88, 88, 0.671); // Set the initial color
+    transition: color 0.3s ease; // Add transition effect for smooth color change
+    
+    &:hover {
+      color: red; // Set the color on hover
+    }
+    // &:active {
+        //   color: black; // Set the color on hover
+        // }
+    }
+}
+
+
+

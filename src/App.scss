@@ -1,0 +1,36 @@
+@import './sass/bootstrap';
+@import './sass/navbar';
+@import './sass/home';
+@import './sass/footer';
+@import './sass/newsLetter';
+@import './sass/login';
+@import './sass/testimonial';
+@import './sass/heroSection';
+@import './sass/about';
+@import './sass/secondHeader';
+@import './sass/servingPizza';
+@import './sass/ourStory';
+@import './sass/darkfooter';
+@import './sass/aboutHeader';
+@import './sass/trendin';
+@import './sass/largeSlider';
+@import './sass/liabraries';
+@import './sass/cart';
+@import './sass/cardsLocal';
+@import './sass/addProducts';
+
+
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+main {
+    flex: 1 0 auto;
+      display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+      // border: 1px solid red;
+      // background-color: #f1faee;
+  }

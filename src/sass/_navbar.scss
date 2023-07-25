@@ -1,0 +1,39 @@
+// For both main and second navbar
+.Navbar,.secondHeader{
+
+  .navbar 
+    .navbar-nav {
+  
+      @media (max-width: 991.98px) {
+        
+        flex-direction: column;
+        text-align: center;
+        // background-color: white;
+        // color: white !important ;
+        margin-top: 10px;
+        // margin-bottom: 10px
+        padding-bottom: 5px;
+        // font-size: "50px";
+  
+        // .nav-item {
+        //   margin-top: 10px;
+        // }
+      }
+    }
+}
+  
+  
+
+
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  
+  .btnNav{
+    color:white;
+    :hover{
+      color: black;
+    }
+  }

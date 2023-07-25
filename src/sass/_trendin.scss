@@ -1,0 +1,72 @@
+// .slidersMid
+//     .splide__arrows--bottom {
+//         position: absolute;
+//         bottom: -10px;
+//         left: 50%;
+//         // transform: translateX(-50%);
+//         z-index: 100;
+//       }
+.trending {
+    // border: 1px solid red;
+    
+    .splide {
+        padding: 0 5rem;
+    }
+
+    .splide__arrow {
+        // path:'<i class="fa-solid fa-arrow-right"></i>';
+        opacity: 1;
+        width: 4rem;
+        margin: 0;
+        height: 4rem;
+        background-color: transparent;
+        border: 1px solid rgb(202, 201, 201);
+        color: black;
+
+        // color: white;
+        &:hover {
+            background-color: rgb(231, 4, 4);
+            color: white;
+
+        }
+
+    }
+
+    .splide__arrows--bottom {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        width: 90vw;
+
+        bottom: -15px;
+        // right: 50%;
+        // transform: translateX(50%);
+        // z-index: 100;
+        .splide__arrow.splide__arrow--prev {
+            left: auto !important;
+            margin-right: 70px;
+        }
+
+        .splide__arrow.splide__arrow--next {
+            margin-left: 70px;
+            right: auto !important;
+        }
+
+        .splide__arrow {
+
+            &:focus {
+                outline: none;
+                /* Remove outline on focus */
+                // border: none; /* Remove border on focus */
+            }
+        }
+    }
+
+    @media (max-width: 640px) {
+        .splide {
+            padding: 0 10px;
+            /* Adjust the padding values as per your requirement */
+        }
+    }
+
+}

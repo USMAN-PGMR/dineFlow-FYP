@@ -1,0 +1,52 @@
+$white: #fdfdfd;
+$secondary: #e2d8d8e3;
+$transparent: transparent;
+
+
+
+  .darkCustom-button {
+    
+  background-color: $transparent;
+  color: $secondary;
+  border: none;
+//   padding: 10px 20px;
+  font-size: 16px;
+  padding: 0;
+//   display: inline-block;
+//   align-items: center;
+//   justify-content: center;
+cursor: pointer;
+.btnText{
+
+  transform: translateX(0);
+}
+&:hover {
+    color: $white;
+    .btnText{
+      transform: translateX(50);
+      
+    }
+    .icon {
+      display: inline-block;
+      padding:0px 5px;
+      //   margin-left: 5px;
+      // transition: margin-left 0.5s ease;
+      transform: translateX(0);
+    }
+  }
+  
+  .icon  {
+    // transition: transform 0.6s ease;
+    display: none;
+    transform: translateX(-100%);
+    // margin-right: 0;
+  }
+}
+
+// ----------
+.darkBtnPrivacy{
+    color:$secondary;
+    &:hover{
+      color: $white;
+    }
+  }

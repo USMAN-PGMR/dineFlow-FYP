@@ -1,0 +1,8 @@
+// @import '../assets/News-Letter-Bg.jpg';
+.newsLetter{
+    background-image: url('../assets/News-Letter-Bg.jpg'), linear-gradient(rgba(65, 63, 63, 0.692),rgba(65, 63, 63, 0.692)) ;
+    background-size: cover;
+background-position: center;
+
+background-blend-mode: overlay;
+}

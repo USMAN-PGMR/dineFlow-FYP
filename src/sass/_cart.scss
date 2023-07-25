@@ -1,0 +1,72 @@
+// customise  table----------
+.custom-table {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 5%;
+    // font-family: fantasy;
+    border: none;
+  }
+  
+  .custom-table th{
+    padding: 13px 8px;
+    // text-align: left;
+    // color: white;
+    border-bottom: 1px solid #131212;
+    // color: azure;
+    // border-radius: 5%;
+  }
+  .custom-table td {
+    // border-top: 1px solid #d8d2d2;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #d8d2d2;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+  }
+  
+  .custom-table th {
+    background-color: #0f0f0f;
+    color: white;
+    // color: white;
+  }
+
+
+
+  // quantty button
+  // .quantity {
+    .qty {
+        display: flex;
+
+        span {
+            cursor: pointer;
+            background-color: #FFF;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            border: 1px solid black;
+        }
+
+        .qty-subtract {
+            border-right: 0;
+            border-radius: 25px 0px 0px 25px;
+        }
+
+        input {
+            cursor: pointer;
+            outline: none;
+            width: 50px;
+            height: 40px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid black;
+        }
+
+        .qty-add {
+            border-Left: 0;
+            border-radius: 0px 25px 25px 0px;
+        }
+    }
+// }

@@ -1,24 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+import '../node_modules/bootstrap/dist/js/bootstrap.bundle';
+import Routes from './pages/Routes'
+import './config/global'
+import './App.scss';
+import './config/productData';
+import AuthContextProvider from './context/AuthContext';
+import { ToastContainer } from 'react-toastify';
+import CartContextProvider from './context/CartContext';
+// import CartContext from './context/CartContext';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <AuthContextProvider>
+      <CartContextProvider>
+
+
+    <BrowserRouter>
+    <Routes/>
+    <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        />
+    </BrowserRouter>
+        </CartContextProvider>
+    </AuthContextProvider>
+    </>
   );
 }
 
