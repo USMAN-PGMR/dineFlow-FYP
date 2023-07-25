@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import { BsPlusLg } from 'react-icons/bs'
 import { AuthContext } from '../../../../context/AuthContext'
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
-import { firestore } from '../../../../config/firebase'
+import { firestore, storage } from '../../../../config/firebase'
 import { collection, getDocs } from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 
 
@@ -15,6 +17,7 @@ const initialState = {
   profession: '',
   status: 'none',
   about: '',
+  // image:'',
 
 }
 
@@ -22,6 +25,7 @@ export default function Team() {
   const [state, setState] = useState(initialState)
   const [TeamMember, setteamMember] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [image, setImage] = useState(null);
 
   const [isProcessing, setisProcessing] = useState(false)
 
@@ -48,64 +52,18 @@ export default function Team() {
   const handleChange = e => {
     setState(s => ({ ...s, [e.target.name]: e.target.value }));
   }
-
-
-  // ----------Handle Submit---------
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    let { fullName, email, address, profession, status, about } = state
-
-    fullName = fullName.trim()
-    email = email.trim()
-    address = address.trim()
-    profession = profession.trim()
-    status = status.trim()
-    about = about.trim()
-
-
-
-    // if (!title) {
-    //   return window.toastify('Please enter your title', 'error')
-    // }
-    // if (title.length < 3) {
-    //   return window.toastify('Title should be atleast 3 character', 'error')
-    // }
-    // if (!location) {
-    //   return window.toastify('Please enter the location', 'error')
-    // }
-    // if (!time) {
-    //   return window.toastify('Please set the time', 'error')
-    // }
-    // if (!discription) {
-    //   return window.toastify('Please enter the discription', 'error')
-    // }
-    // if (discription.length < 10) {
-    //   return window.toastify('Your discription is too short', 'error')
-    // }
-
-
-    //OR
-
-    let TeamData = { fullName, email, address, profession, status, about }
-
-    TeamData.dateCreated = serverTimestamp()
-    TeamData.id = window.getRandomId()
-    // ProductsData.status = "active"
-    TeamData.createdBy = {
-      email: user.email,
-      uid: user.uid
+  // -------------handle imageChange-----------
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0])
     }
-
-    createDocument(TeamData)
-    fetchTeamMember();
-
   }
+
 
   //----------------Create Document----------------
   const createDocument = async (TeamData) => {
     // console.log(formData)
-    setisProcessing(true)
+    // setisProcessing(true)
     try {
       await setDoc(doc(firestore, "Team", TeamData.id), TeamData);
       window.toastify("Team member has been added successfully", "success")
@@ -119,6 +77,93 @@ export default function Team() {
 
     setisProcessing(false)
   }
+  // ----------Handle Submit---------
+  const handleSubmit = e => {
+    e.preventDefault();
+    setisProcessing(true)
+
+    const storageRef = ref(storage, `images/${image.name + Math.random().toString(10).slice(2)}`);
+
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      },
+      (error) => {
+        console.log('error', error)
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          // setUrl(downloadURL)
+
+          let { fullName, email, address, profession, status, about, image } = state
+
+          fullName = fullName.trim()
+          email = email.trim()
+          address = address.trim()
+          profession = profession.trim()
+          status = status.trim()
+          about = about.trim()
+
+
+
+          // if (!title) {
+          //   return window.toastify('Please enter your title', 'error')
+          // }
+          // if (title.length < 3) {
+          //   return window.toastify('Title should be atleast 3 character', 'error')
+          // }
+          // if (!location) {
+          //   return window.toastify('Please enter the location', 'error')
+          // }
+          // if (!time) {
+          //   return window.toastify('Please set the time', 'error')
+          // }
+          // if (!discription) {
+          //   return window.toastify('Please enter the discription', 'error')
+          // }
+          // if (discription.length < 10) {
+          //   return window.toastify('Your discription is too short', 'error')
+          // }
+
+
+          //OR
+
+          let TeamData = { fullName, email, address, profession, status, about, image: downloadURL }
+
+          TeamData.dateCreated = serverTimestamp()
+          TeamData.id = window.getRandomId()
+          TeamData.createdBy = {
+            email: user.email,
+            uid: user.uid
+          }
+
+          createDocument(TeamData)
+          fetchTeamMember();
+        });
+        // setImage(null);
+      }
+    );
+
+
+
+
+
+  }
+
+
 
 
 
@@ -175,7 +220,7 @@ export default function Team() {
                                 </div>
                               </div>
                               <div className="row pt-2">
-                                <div className="col-12">
+                                <div className="col-12 col-lg-6">
                                   <label htmlFor="status" className='fw-semibold py-2'>Status</label>
                                   <select name="status" className='form-control py-2' value={state.status} onChange={handleChange}>
                                     <option value="none">Select The Status</option>
@@ -183,6 +228,17 @@ export default function Team() {
                                     <option value="inactive">Inactive</option>
                                     {/* <option value="Country 3">Country 3</option> */}
                                   </select>
+                                </div>
+                                <div className="col-12 col-lg-6">
+                                  <label for="image" className='fw-semibold py-2'>Image</label>
+                                  <input
+                                    key={isProcessing ? "processing" : "normal"} // Add key prop here
+                                    type="file"
+                                    name="image"
+                                    className="form-control py-2"
+                                    placeholder="Image"
+                                    onChange={handleImageChange}
+                                  />
                                 </div>
                               </div>
                               <div className="row py-2">
@@ -212,38 +268,57 @@ export default function Team() {
                 <hr />
 
                 {!isLoading ? (
-                  <Table className="table ps-4 ">
-                    <Thead className='bg-dark'>
-                      <Tr>
-                        <Th scope="col">Name</Th>
-                        <Th scope="col">Email</Th>
-                        <Th scope="col">Address</Th>
-                        <Th scope="col">Profession</Th>
-                        <Th scope="col">About</Th>
-                        <Th scope="col">status</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody >
-                      {TeamMember.map((team, index) => (
-                        <Tr key={index}>
-
-                          <Td colspan="" className="">
-
-                            <span className="d-inline-block ps-1 ">{team.fullName}</span>
-                          </Td>
-                          <Td className="my-auto">{team.email} </Td>
-                          <Td className="">
-                            {team.address}
-                          </Td>
-                          <Td >{team.profession}</Td>
-                          <Td >{team.about}</Td>
-                          <Td >{team.status}</Td>
-
+                  TeamMember.length > 0 ? (
+                    <Table className="table ps-4 ">
+                      <Thead className='bg-dark'>
+                        <Tr>
+                          <Th scope="col">Image</Th>
+                          <Th scope="col">Name</Th>
+                          <Th scope="col">Email</Th>
+                          <Th scope="col">Address</Th>
+                          <Th scope="col">Profession</Th>
+                          <Th scope="col">About</Th>
+                          <Th scope="col">status</Th>
                         </Tr>
-                      ))}
+                      </Thead>
+                      <Tbody >
+                        {TeamMember.map((team, index) => (
+                          <Tr key={index}>
 
-                    </Tbody>
-                  </Table>
+                            <Td className="my-auto">
+                              {team.image ? (
+                                <img
+                                  className="rounded-circle img-fluid"
+                                  src={team.image}
+                                  style={{ width: '40px', height: '40px' }}
+                                  alt=""
+                                />
+                              ) : (
+                                <span className="spinner text-center text-secondary spinner-border"></span>
+                              )}
+                            </Td>
+                            <Td colspan="" className="">
+
+                              <span className="d-inline-block ps-1 ">{team.fullName}</span>
+                            </Td>
+                            <Td className="my-auto">{team.email} </Td>
+                            <Td className="">
+                              {team.address}
+                            </Td>
+                            <Td >{team.profession}</Td>
+                            <Td >{team.about}</Td>
+                            <Td >{team.status}</Td>
+
+                          </Tr>
+                        ))}
+
+                      </Tbody>
+                    </Table>
+                  ) : (
+                    <p className="text-center text-danger fs-4">No Team Member!</p>
+                  )
+
+
                 ) : (
                   <div className="text-center">
                     <div className="spinner spinner-grow"></div>

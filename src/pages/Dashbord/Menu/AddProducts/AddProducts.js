@@ -29,7 +29,7 @@ const initialState = {
 export default function AddProducts() {
   // for image
   const [image, setImage] = useState(null);
-  const [url, setUrl] = useState(null);
+  const [url, setUrl] = useState();
   // for content
   const [state, setState] = useState(initialState)
   const [isProcessing, setisProcessing] = useState(false)
@@ -42,51 +42,6 @@ export default function AddProducts() {
     }
   }
 
-  // const handleImageSubmit = () => {
-  //   console.log('image', image)
-
-  // }
-  // Function to handle image upload to Firebase Storage
-  const uploadImageToStorage = async () => {
-    if (image) {
-      const storage = getStorage();
-      const storageRef = ref(storage, `images/${image.name + Math.random().toString(10).slice(2)}`);
-
-      try {
-        const uploadTask = uploadBytesResumable(storageRef, image);
-
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-              case 'paused':
-                console.log('Upload is paused');
-                break;
-              case 'running':
-                console.log('Upload is running');
-                break; 
-            }
-          },
-          (error) => {
-            console.log('Error uploading image:', error);
-          },
-          async () => {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            setUrl(downloadURL);
-            console.log('Image URL:', downloadURL);
-            // Now that we have the image URL, we don't need to call handleSubmit here.
-          }
-        );
-      } catch (error) {
-        console.error('Error uploading image:', error);
-      }
-    } else {
-      console.log('No image selected.');
-    }
-  };
-
 
 
   const handleChange = e => {
@@ -94,67 +49,71 @@ export default function AddProducts() {
   }
   // console.log('e.target', e.target)
   // ----------Handle Submit---------
-  const handleSubmit = async(e,imgUrl) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    // const storage = getStorage();
-    // const storageRef = ref(storage, `images/${image.name + Math.random().toString(10).slice(2)}`);
+    setisProcessing(true)
+   
+    const storageRef = ref(storage, `images/${image.name + Math.random().toString(10).slice(2)}`);
 
-    // const uploadTask = uploadBytesResumable(storageRef, image);
+    const uploadTask = uploadBytesResumable(storageRef, image);
 
-    // uploadTask.on('state_changed',
-    //   (snapshot) => {
-    //     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //     console.log('Upload is ' + progress + '% done');
-    //     switch (snapshot.state) {
-    //       case 'paused':
-    //         console.log('Upload is paused');
-    //         break;
-    //       case 'running':
-    //         console.log('Upload is running');
-    //         break;
-    //     }
-    //   },
-    //   (error) => {
-    //     console.log('error', error)
-    //   },
-    //   () => {
-    //     // Handle successful uploads on complete
-    //     // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-    //     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-    //       setUrl(downloadURL)
-    //     });
-    //   }
-    // );
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      },
+      (error) => {
+        console.log('error', error)
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setUrl(downloadURL)
+    let { name, title, type, category, slug, stock, price, discount, status, description } = state
 
-          let { name, title, type, category, slug, stock, price, discount, status, description } = state
-
-          name = name.trim()
-          title = title.trim()
-          type = type.trim()
-          category = category.trim()
-          slug = slug.trim()
-          status = status.trim()
-          description = description.trim()
+    name = name.trim()
+    title = title.trim()
+    type = type.trim()
+    category = category.trim()
+    slug = slug.trim()
+    status = status.trim()
+    description = description.trim()
 
 
-          let ProductsData = { name, title, type, category, slug, stock, price, discount, status, description, image: imgUrl, }
+    let ProductsData = { name, title, type, category, slug, stock, price, discount, status, description, image: downloadURL, }
 
-          ProductsData.dateCreated = serverTimestamp()
-          ProductsData.id = window.getRandomId()
-          // ProductsData.status = "active"
-          ProductsData.createdBy = {
-            email: user.email,
-            uid: user.uid
-          }
+    ProductsData.dateCreated = serverTimestamp()
+    ProductsData.id = window.getRandomId()
+    // ProductsData.status = "active"
+    ProductsData.createdBy = {
+      email: user.email,
+      uid: user.uid
+    }
+    createDocument(ProductsData)
 
-          console.log(ProductsData.name)
-          createDocument(ProductsData)
+  });
+  setisProcessing(false)
+}
+);
+
+          
+
+          // console.log(ProductsData.name)
+
   }
 
   //----------------Create Document----------------
   const createDocument = async (ProductsData) => {
     // console.log(formData)
-    setisProcessing(true)
     try {
       await setDoc(doc(firestore, "Products", ProductsData.id), ProductsData);
       window.toastify("Product has been added successfully", "success")
@@ -166,23 +125,21 @@ export default function AddProducts() {
     }
     // setState(initialState)
 
-    setisProcessing(false)
+    // setisProcessing(false)
   }
 
-  // ---------avatar--------
-  const [avatarUrl, setAvatarUrl] = useState("https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=");
+  // Conditionally set the Avatar icon
+  const avatarIcon = image ? (
+    <img
+      className="img-fluid w-100"
+      src={URL.createObjectURL(image)}
+      alt="Selected Avatar"
+    />
+  ) : (
+    <UserOutlined />
+  );
 
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        setAvatarUrl(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
+  
 
   return (
     <>
@@ -272,15 +229,15 @@ export default function AddProducts() {
         </div>
         <input type="file" name='img' className="form-control p-2" onChange={handleAvatarChange} />
       </label> */}
-              <Avatar className='text-center my-3'
-                
-                size={150} // Adjust the size of the avatar as per your requirement
+             <Avatar
+                className="text-center my-3"
+                size={150}
                 style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-                icon={<UserOutlined />} // Fallback icon when the user is not logged in
+                icon={avatarIcon} // Conditionally set the Avatar icon
                 alt="Default Avatar"
               />
               <input type="file" className='form-control' onChange={handleImageChange} />
