@@ -81,6 +81,54 @@ export default function Team() {
   const handleSubmit = e => {
     e.preventDefault();
     setisProcessing(true)
+   
+
+    if (!state.fullName) {
+      window.toastify('Please enter the name', 'error');
+      setisProcessing(false);
+      return;
+    }
+    if (state.fullName.length < 3) {
+      window.toastify('Name is not correct', 'error');
+      setisProcessing(false);
+      return;
+    }
+    if (!state.email) {
+      window.toastify('Please enter the email', 'error');
+      setisProcessing(false);
+      return;
+    }
+    if(!window.isEmail(state.email)){
+      window.toastify('Please enter the correct email', 'error');
+      setisProcessing(false);
+      return;
+    }
+    if (!state.address) {
+      window.toastify('Please enter the address', 'error');
+      setisProcessing(false);
+      return;
+    }
+    if (!state.profession) {
+      window.toastify('Please enter the profession', 'error');
+      setisProcessing(false);
+      return;
+    }
+    if (!state.status) {
+      window.toastify('Please enter the status', 'error');
+      setisProcessing(false);
+      return;
+    }
+    if (!state.about) {
+      window.toastify('Please enter the about', 'error');
+      setisProcessing(false);
+      return;
+    }
+    if (!image) {
+      // If no image is selected, display an error message and return
+      window.toastify('Please select an image', 'error');
+      setisProcessing(false);
+      return;
+    }
 
     const storageRef = ref(storage, `images/${image.name + Math.random().toString(10).slice(2)}`);
 
@@ -105,54 +153,37 @@ export default function Team() {
       () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          // setUrl(downloadURL)
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((downloadURL) => {
+            // setUrl(downloadURL)
 
-          let { fullName, email, address, profession, status, about, image } = state
+            let { fullName, email, address, profession, status, about, image } = state
 
-          fullName = fullName.trim()
-          email = email.trim()
-          address = address.trim()
-          profession = profession.trim()
-          status = status.trim()
-          about = about.trim()
-
-
-
-          // if (!title) {
-          //   return window.toastify('Please enter your title', 'error')
-          // }
-          // if (title.length < 3) {
-          //   return window.toastify('Title should be atleast 3 character', 'error')
-          // }
-          // if (!location) {
-          //   return window.toastify('Please enter the location', 'error')
-          // }
-          // if (!time) {
-          //   return window.toastify('Please set the time', 'error')
-          // }
-          // if (!discription) {
-          //   return window.toastify('Please enter the discription', 'error')
-          // }
-          // if (discription.length < 10) {
-          //   return window.toastify('Your discription is too short', 'error')
-          // }
+            fullName = fullName.trim()
+            email = email.trim()
+            address = address.trim()
+            profession = profession.trim()
+            status = status.trim()
+            about = about.trim()
 
 
-          //OR
 
-          let TeamData = { fullName, email, address, profession, status, about, image: downloadURL }
+          
+           
+            //OR
 
-          TeamData.dateCreated = serverTimestamp()
-          TeamData.id = window.getRandomId()
-          TeamData.createdBy = {
-            email: user.email,
-            uid: user.uid
-          }
+            let TeamData = { fullName, email, address, profession, status, about, image: downloadURL }
 
-          createDocument(TeamData)
-          fetchTeamMember();
-        });
+            TeamData.dateCreated = serverTimestamp()
+            TeamData.id = window.getRandomId()
+            TeamData.createdBy = {
+              email: user.email,
+              uid: user.uid
+            }
+
+            createDocument(TeamData)
+            fetchTeamMember();
+          });
         // setImage(null);
       }
     );

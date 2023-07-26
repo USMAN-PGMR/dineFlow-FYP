@@ -16,7 +16,7 @@ export default function Header() {
   // --------cart---------
   const { state: { cart } } = CartState()
 
-
+  const { userInfo } = useContext(AuthContext)
 
   // --------authentication-----------
   const { isAuthenticated, dispatch } = useContext(AuthContext)
@@ -87,13 +87,17 @@ export default function Header() {
             <Link to='/cart' className='btn py-0 px-0 mx-0 position-relative' >
               <span style={{ fontSize: '20px' }}>
 
-              <BsHandbag />
+                <BsHandbag />
               </span>
-            {/* <span className="badge badge-danger text-danger  mb-1 px-0">0</span> */}
-            <span style={{ fontSize: '9px' }} class="position-absolute top-0 mt-2 start-100 translate-middle badge rounded-pill  fw-light bg-danger text-white">
-                      {cart.length}
-                     
-                    </span>
+              {/* <span className="badge badge-danger text-danger  mb-1 px-0">0</span> */}
+              {cart.length > 0 && (
+                <span
+                  style={{ fontSize: '9px' }}
+                  className="position-absolute top-0 mt-2 start-100 translate-middle badge rounded-pill fw-light bg-danger text-white"
+                >
+                  {cart.length}
+                </span>
+              )}
             </Link>
             {/* <i className='btn py-0  pe-0 ps-3   mx-0' style={{ fontSize: '20px' }}><  BiLogInCircle /></i> */}
             {!isAuthenticated
@@ -151,6 +155,11 @@ export default function Header() {
               <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/cards-local'>Cards Local</Link>
               </li>
+              {userInfo && userInfo.role == "admin" ?
+                <li className="nav-item">
+                  <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/dashbord/home'>Dashboard</Link>
+                </li> : ''}
+
             </ul>
             <ul className=' my-0 py-0'>
 
@@ -160,11 +169,14 @@ export default function Header() {
                   <Link to='/cart' className='bg-transparent border-0 mx-3  btnNav position-relative '  >
                     <span style={{ fontSize: '27px' }}>
                       <BsHandbag />
-                    </span>
+                      </span>
+                      {cart.length>0 &&(
+
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill ps-2 bg-white text-danger">
                       {cart.length}
-                     
+
                     </span>
+                      )}
                     {/* <span className="badge  text-danger border fw-bold  py-1 bg-white px-1">{cart.length}</span> */}
                   </Link>
                   {!isAuthenticated
