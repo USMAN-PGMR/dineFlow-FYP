@@ -204,7 +204,7 @@ export default function Team() {
       <div className="container p-3">
         <div className="row">
           <div className="col-12">
-            <h5>Messages</h5>
+            <h5>Team</h5>
             <p className="fw-semibold">
               <Link className="text-decoration-none text-secondary">Dashboard</Link> /{' '}
               <Link className="text-decoration-none text-dark">Team </Link>

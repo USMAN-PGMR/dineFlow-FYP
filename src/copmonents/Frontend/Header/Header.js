@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { BsHandbag } from 'react-icons/bs';
 import { BiLogInCircle } from 'react-icons/bi';
 // import { RxAvatar } from 'react-icons/rx';\
@@ -13,10 +13,15 @@ import { Avatar, Dropdown } from 'antd';
 import { CartState } from '../../../context/CartContext';
 
 export default function Header() {
+
+
   // --------cart---------
   const { state: { cart } } = CartState()
+  // useEffect(() => {
 
-  const { userInfo } = useContext(AuthContext)
+    const { userInfo } = useContext(AuthContext)
+  // }, []);
+  
 
   // --------authentication-----------
   const { isAuthenticated, dispatch } = useContext(AuthContext)
@@ -51,23 +56,23 @@ export default function Header() {
   const items = [
     {
       label: (
-        <a target="_blank" rel="noopener noreferrer" className='text-decoration-none' href="https://www.antgroup.com">
+        <Link to='/UserProfile' rel="noopener noreferrer" className='text-decoration-none' href="https://www.antgroup.com">
           Profile
-        </a>
+        </Link>
       ),
       key: '0',
     },
     {
       label: (
-        <a target="_blank" rel="noopener noreferrer" className='text-decoration-none' href="https://www.aliyun.com">
+        <Link to='/my-order' rel="noopener noreferrer" className='text-decoration-none' href="https://www.aliyun.com">
           My Order
-        </a>
+        </Link>
       ),
       key: '1',
     },
     {
       label: (
-        <button target="_blank" rel="noopener noreferrer" className='border-0 bg-transparent' onClick={handleLogout} href="https://www.aliyun.com">
+        <button rel="noopener noreferrer" className='border-0 bg-transparent' onClick={handleLogout} >
           Logout
         </button>
       ),
@@ -111,7 +116,15 @@ export default function Header() {
                     items,
                   }}
                 >
-                  <a onClick={(e) => e.preventDefault()}>
+                  <Link onClick={(e) => e.preventDefault()}>
+                  {userInfo && userInfo.image ? ( // Check if the user's image is available
+                            <img
+                            className=''
+                              src={userInfo.image} // Display the user's image
+                              alt="User Avatar"
+                              style={{ width: '30px', height: '30px', borderRadius: '50%' }}
+                            />
+                          ) : (
                     <Avatar
                       size={35} // Adjust the size of the avatar as per your requirement
                       style={{
@@ -122,7 +135,8 @@ export default function Header() {
                       icon={<UserOutlined />} // Fallback icon when the user is not logged in
                       alt="Default Avatar"
                     />
-                  </a>
+                          )}
+                  </Link>
                 </Dropdown>
               </>
             }
@@ -165,18 +179,18 @@ export default function Header() {
 
               <div className="  d-none d-lg-flex  my-0 py-0">
                 {/* <div className="btn btn-danger rounded-0 py-4 px-3 fw-bold   " style={{fontSize:'21px'}}> <span className='mt-1 d-inline-block'>Order Now</span> </div> */}
-                <div className=" bg-danger  py-4  f px-3">
-                  <Link to='/cart' className='bg-transparent border-0 mx-3  btnNav position-relative '  >
-                    <span style={{ fontSize: '27px' }}>
+                <div className=" bg-danger  py-4   px-3">
+                  <Link to='/cart' className='bg-transparent border-0 mx-3  border btnNav position-relative '  >
+                    <span className='' style={{ fontSize: '27px' }}>
                       <BsHandbag />
-                      </span>
-                      {cart.length>0 &&(
-
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill ps-2 bg-white text-danger">
-                      {cart.length}
-
                     </span>
-                      )}
+                    {cart.length > 0 && (
+
+                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill ps-2 bg-white text-danger">
+                        {cart.length}
+
+                      </span>
+                    )}
                     {/* <span className="badge  text-danger border fw-bold  py-1 bg-white px-1">{cart.length}</span> */}
                   </Link>
                   {!isAuthenticated
@@ -190,18 +204,28 @@ export default function Header() {
                           items,
                         }}
                       >
-                        <a onClick={(e) => e.preventDefault()}>
-                          <Avatar
-                            size={40} // Adjust the size of the avatar as per your requirement
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}
-                            icon={<UserOutlined />} // Fallback icon when the user is not logged in
-                            alt="Default Avatar"
-                          />
-                        </a>
+                        <Link onClick={(e) => e.preventDefault()}>
+                          {userInfo && userInfo.image ? ( // Check if the user's image is available
+                            <img
+                            className='mb-1'
+                              src={userInfo.image} // Display the user's image
+                              alt="User Avatar"
+                              style={{ width: '34px', height: '34px', borderRadius: '50%' }}
+                            />
+                          ) : (
+                            // Fallback to default Avatar if the user's image is not available
+                            <Avatar
+                              size={35} // Adjust the size of the avatar as per your requirement
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                              icon={<UserOutlined />} // Fallback icon when the user is not logged in
+                              alt="Default Avatar"
+                            />
+                          )}
+                        </Link>
                       </Dropdown>
                     </>
                   }

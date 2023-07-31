@@ -14,9 +14,12 @@ import { auth } from '../../../config/firebase';
 
 export default function AboutHeader() {
 
-   // cart
-   const { state: { cart } } = CartState()
-   const { isAuthenticated, dispatch } = useContext(AuthContext)
+  // cart
+  const { state: { cart } } = CartState()
+  const { isAuthenticated, dispatch } = useContext(AuthContext)
+  //  Dashbord
+  const { userInfo } = useContext(AuthContext)
+
 
   //  logout------------
   const handleLogout = () => {
@@ -49,20 +52,20 @@ export default function AboutHeader() {
   }
 
   // items ----avatar---------
-   const items = [
+  const items = [
     {
       label: (
-        <a target="_blank" rel="noopener noreferrer" className='text-decoration-none' href="https://www.antgroup.com">
+        <Link to='/UserProfile' rel="noopener noreferrer" className='text-decoration-none' href="https://www.antgroup.com">
           Profile
-        </a>
+        </Link>
       ),
       key: '0',
     },
     {
       label: (
-        <a target="_blank" rel="noopener noreferrer" className='text-decoration-none' href="https://www.aliyun.com">
+        <Link to='/my-order' target="_blank" rel="noopener noreferrer" className='text-decoration-none' href="https://www.aliyun.com">
           My Order
-        </a>
+        </Link>
       ),
       key: '1',
     },
@@ -78,16 +81,16 @@ export default function AboutHeader() {
   return (
     <div className="aboutHeader">
 
-   
-    <nav className="navbar secondNav navbar-expand-lg py-0  bg-transparent  ">
-    <div className="container px-0 py-0 my-0 ">
-      <a className="navbar-brand mx-0   px-0" ><img className='w-75 ps-2 py-1  ' src={lightLogo} alt="" /></a>
-      {/* only on small screen */}
-      <div className="d-column align-items-end  justify-content-end  d-sm-block d-lg-none  ">
-           
+
+      <nav className="navbar secondNav navbar-expand-lg py-0  bg-transparent  ">
+        <div className="container px-0 py-0 my-0 ">
+          <a className="navbar-brand mx-0   px-0" ><img className='w-75 ps-2 py-1  ' src={lightLogo} alt="" /></a>
+          {/* only on small screen */}
+          <div className="d-column align-items-end  justify-content-end  d-sm-block d-lg-none  ">
+
             {/* <i className='btn btnNavAbout py-0 px-0 mx-0'style={{fontSize:'20px'}}><BsHandbag /></i>
             <i className='btn btnNavAbout py-0  pe-0 ps-1   mx-0' style={{fontSize:'20px'}}><  IoIosSearch /></i> */}
-            
+
             <Link to='/cart' className='btnbtnNavAbout text-decoration-none text-white py-0 px-0 mx-0 position-relative' >
               <span style={{ fontSize: '20px' }}>
 
@@ -114,53 +117,66 @@ export default function AboutHeader() {
                     items,
                   }}
                 >
-                  <a onClick={(e) => e.preventDefault()}>
-                    <Avatar
-                      size={32} // Adjust the size of the avatar as per your requirement
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                      icon={<UserOutlined />} // Fallback icon when the user is not logged in
-                      alt="Default Avatar"
-                    />
-                  </a>
+                  <Link onClick={(e) => e.preventDefault()}>
+                    {userInfo && userInfo.image ? ( // Check if the user's image is available
+                      <img
+                        className=''
+                        src={userInfo.image} // Display the user's image
+                        alt="User Avatar"
+                        style={{ width: '30px', height: '30px', borderRadius: '50%' }}
+                      />
+                    ) : (
+                      <Avatar
+                        size={32} // Adjust the size of the avatar as per your requirement
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                        icon={<UserOutlined />} // Fallback icon when the user is not logged in
+                        alt="Default Avatar"
+                      />
+                    )}
+                  </Link>
                 </Dropdown>
               </>
             }
           </div>
-     
-      <button className="navbar-toggler text-white  border-0 btn " type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span className="fa-solid fa-bars text-white   px-0 mx-0"></span>
-      </button>
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav me-auto   mb-2 mb-lg-0">
-          <li className="nav-item ">
-            <Link className="nav-link   fw-semibold mx-lg-2" aria-current="page" to='/'>Home</Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/about'>About</Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/contact'>Contact Us</Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/login'>Login</Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/register'>Register</Link>
-          </li>   
-        </ul>
-        <ul className=' my-0 py-0'>
-  
-        
-        <div className="  d-none d-lg-flex  my-0 py-0">
-            {/* <div className="btn btn-danger rounded-0 py-4 px-3 fw-bold   " style={{fontSize:'21px'}}> <span className='mt-1 d-inline-block'>Order Now</span> </div> */}
-            <div className="   py-4  fw-bolder px-2">
-              {/* <button className='bg-transparent border-0 px-3 border btnNavAbout  ' style={{fontSize:'25px'}} ><BsHandbag /></button> */}
-              {/* <button className='bg-transparent  border-0 px-2 btnNavAbout  ' style={{fontSize:'25px'}}><  IoIosSearch /></button> */}
-              <Link to='/cart' className='bg-transparent border-0 px-3 pt-1 border btnNavAbout  position-relative' >
+
+          <button className="navbar-toggler text-white  border-0 btn " type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="fa-solid fa-bars text-white   px-0 mx-0"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto   mb-2 mb-lg-0">
+              <li className="nav-item ">
+                <Link className="nav-link   fw-semibold mx-lg-2" aria-current="page" to='/'>Home</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/about'>About</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/contact'>Contact Us</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/login'>Login</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/register'>Register</Link>
+              </li>
+              {userInfo && userInfo.role == "admin" ?
+                <li className="nav-item">
+                  <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/dashbord/home'>Dashboard</Link>
+                </li> : ''}
+            </ul>
+            <ul className=' my-0 py-0'>
+
+
+              <div className="  d-none d-lg-flex  my-0 py-0">
+                {/* <div className="btn btn-danger rounded-0 py-4 px-3 fw-bold   " style={{fontSize:'21px'}}> <span className='mt-1 d-inline-block'>Order Now</span> </div> */}
+                <div className="   py-4  fw-bolder px-2">
+                  {/* <button className='bg-transparent border-0 px-3 border btnNavAbout  ' style={{fontSize:'25px'}} ><BsHandbag /></button> */}
+                  {/* <button className='bg-transparent  border-0 px-2 btnNavAbout  ' style={{fontSize:'25px'}}><  IoIosSearch /></button> */}
+                  <Link to='/cart' className='bg-transparent border-0 px-3 pt-1 border btnNavAbout  position-relative' >
                     <span style={{ fontSize: '26px' }}>
 
                       <BsHandbag className='mt-1' />
@@ -187,28 +203,37 @@ export default function AboutHeader() {
                           items,
                         }}
                       >
-                        <a onClick={(e) => e.preventDefault()}>
-                          <Avatar
-                            size={38} // Adjust the size of the avatar as per your requirement
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}
-                            icon={<UserOutlined />} // Fallback icon when the user is not logged in
-                            alt="Default Avatar"
-                          />
-                        </a>
+                        <Link onClick={(e) => e.preventDefault()}>
+                          {userInfo && userInfo.image ? ( // Check if the user's image is available
+                            <img
+                              className='mb-1'
+                              src={userInfo.image} // Display the user's image
+                              alt="User Avatar"
+                              style={{ width: '34px', height: '34px', borderRadius: '50%' }}
+                            />
+                          ) : (
+                            <Avatar
+                              size={38} // Adjust the size of the avatar as per your requirement
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                              icon={<UserOutlined />} // Fallback icon when the user is not logged in
+                              alt="Default Avatar"
+                            />
+                          )}
+                        </Link>
                       </Dropdown>
                     </>
                   }
-            </div>
+                </div>
+              </div>
+
+            </ul>
           </div>
-       
-        </ul>
-      </div>
+        </div>
+      </nav>
     </div>
-  </nav>
-</div>
   )
 }

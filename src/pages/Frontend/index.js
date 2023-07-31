@@ -9,6 +9,8 @@ import CardsLocal from '../../copmonents/Frontend/CardsLocal/CardsLocal'
 import NoPage from '../Dashbord/NoPage'
 import PrivateRoute from '../PrivateRoute'
 import { AuthContext } from '../../context/AuthContext'
+import Userprofile from './Userprofile'
+import MyOrder from './MyOrder'
 
 export default function Index() {
   const isAuthenticated = useContext(AuthContext)
@@ -22,7 +24,9 @@ export default function Index() {
         <Route path='contact' element={<Contact />} />
         <Route path='about' element={<About />} />
         <Route path="cart" element={<PrivateRoute Component={Cart}/>}/>
-        <Route path='checkout' element={<CheckOut />} />
+        <Route path='checkout' element={<PrivateRoute Component={CheckOut}/>} />
+        <Route path='userProfile' element={<PrivateRoute Component={Userprofile}/>} />
+        <Route path='my-order' element={<PrivateRoute Component={MyOrder}/>} />
         <Route path='cards-local' element={<CardsLocal />} />
         <Route path='*' element={<NoPage />} />
       </Routes>

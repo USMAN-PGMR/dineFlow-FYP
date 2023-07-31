@@ -10,166 +10,122 @@ import { AuthContext } from '../../../../context/AuthContext';
 
 
 export default function Profile() {
-  // for image
-  const { userInfo } = useContext(AuthContext);
-  const initialState = {
-    fullName: '',
-    email: userInfo.email,
-    number: '',
-    role: '',
-    address: '',
-    profession: '',
-    bio: '',
-  }
-
+  const { user } = useContext(AuthContext);
+  const [profile, setProfile] = useState({});
   const [image, setImage] = useState(null);
-  const [url, setUrl] = useState();
-  // for content
-  const [state, setState] = useState(initialState)
-  const [isProcessing, setisProcessing] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false);
 
+  // Function to fetch admin data
+const fetchAdminData = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(firestore, 'users'));
+    const adminData = querySnapshot.docs.find((doc) => doc.data().role === 'admin');
 
-  const { user } = useContext(AuthContext)
-
-
-  // -----------fetch the documents------------
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const docRef = doc(firestore, 'Admin_Profile', user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          setState(docSnap.data());
-        } else {
-          console.log('Document not found');
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    if (user && user.uid) {
-      fetchProfileData();
+    if (adminData) {
+      setProfile(adminData.data());
+    } else {
+      // Handle case when admin data is not found
     }
-  }, []);
-  // ---------handle image change----------------
+  } catch (error) {
+    console.error('Error fetching admin data:', error);
+  }
+};
+
+// Fetch admin data when the component mounts
+useEffect(() => {
+  fetchAdminData();
+}, []);
+
+
+  // Function to upload image to Firebase Storage
+  const uploadImageToStorage = async (file) => {
+    try {
+      const storageRef = ref(storage, `admin_images/${user.uid}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      await uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          // Handle progress if needed
+        },
+        (error) => {
+          console.error('Error uploading image:', error);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          // Update the profile state with the image URL
+          setProfile((prevProfile) => ({
+            ...prevProfile,
+            image: downloadURL,
+          }));
+        }
+      );
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+  // Function to handle image upload
+  const handleImageUpload = async () => {
+    if (image) {
+      setIsProcessing(true);
+      await uploadImageToStorage(image);
+      setIsProcessing(false);
+    }
+  };
+
+
+  // Define handleChange function
+  const handleChange = (e) => {
+    setProfile((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
+  };
+
+
+  // Function to handle form submit for updating user data
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setIsProcessing(true);
+
+    // Upload the image first, if available
+    if (image) {
+      await handleImageUpload();
+    }
+
+    // Now, update the user profile
+    try {
+      const formData = {
+        ...profile,
+        dateModified: serverTimestamp(),
+        emailModified: {
+          email: user.email,
+          uid: user.uid,
+        },
+      };
+
+      await setDoc(doc(firestore, 'users', user.uid), formData, { merge: true });
+      setProfile(formData); // Update the local state with the new data
+      window.toastify('Your Profile has been updated successfully', 'success');
+    } catch (error) {
+      console.error(error);
+      window.toastify('Something went wrong! Profile not updated', 'error');
+    }
+    setIsProcessing(false);
+  };
+
+  // Function to handle image change
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
-      setImage(e.target.files[0])
+      setImage(e.target.files[0]);
     }
-  }
-
-
-  //  ----------handle change---------------
-  const handleChange = e => {
-    setState(s => ({ ...s, [e.target.name]: e.target.value }));
-  }
-  // console.log('e.target', e.target)
-  // ----------Handle Submit---------
-  const handleSubmit = e => {
-    e.preventDefault();
-    setisProcessing(true)
-
-    const storageRef = ref(storage, `Admin_Profile/${image.name + Math.random().toString(10).slice(2)}`);
-
-    const uploadTask = uploadBytesResumable(storageRef, image);
-
-    uploadTask.on('state_changed',
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        switch (snapshot.state) {
-          case 'paused':
-            console.log('Upload is paused');
-            break;
-          case 'running':
-            console.log('Upload is running');
-            break;
-        }
-      },
-      (error) => {
-        console.log('error', error)
-      },
-      () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setUrl(downloadURL)
-          let { fullName, email, number, role, address, profession, bio } = state
-
-          fullName = fullName.trim()
-          //  email = email.trim()
-          role = role.trim()
-          address = address.trim()
-          profession = profession.trim()
-          bio = bio.trim()
+  };
 
 
 
-          let adminData = { fullName, email, number, role, address, profession, bio, image: downloadURL, }
 
-          adminData.dateCreated = serverTimestamp()
-          adminData.id = window.getRandomId()
-          // ProductsData.status = "active"
-          adminData.createdBy = {
-            email: user.email,
-            uid: user.uid
-          }
-          createDocument(adminData)
-
-        });
-        setisProcessing(false)
-      }
-    );
-
-
-
-    // console.log(ProductsData.name)
-
-  }
-
-  //----------------Create Document----------------
-  const createDocument = async (adminData) => {
-    // console.log(formData)
-    try {
-      await setDoc(doc(firestore, "Admin_Profile", adminData.id), adminData);
-      window.toastify("Your Profile is Updated successfully", "success")
-      //  setState(initialState)
-      // clearInput()
-    } catch (err) {
-      console.error(err)
-      window.toastify("Something went wrong! Profile is not updated", "error")
-    }
-    // setState(initialState)
-
-    // setisProcessing(false)
-  }
-
-  // Conditionally set the Avatar icon
-  //  const avatarIcon = image ? (
-  //    <img
-  //      className="img-fluid w-100"
-  //      src={URL.createObjectURL(image)}
-  //      alt="Selected Avatar"
-  //    />
-  //  ) : (
-  //    <UserOutlined />
-  //  );
-
-
-
-  const avatarIcon = image ? (
-    <img
-      className="img-fluid w-100"
-      src={URL.createObjectURL(image)}
-      alt="Selected Avatar"
-    />
+  const avatarIcon = profile.image ? (
+    <img className="img-fluid w-100" src={profile.image} alt="Selected Avatar" />
   ) : (
     <UserOutlined />
   );
-
-
 
 
   return (
@@ -183,9 +139,8 @@ export default function Profile() {
               <Link className="text-decoration-none text-dark">Profile </Link>
             </p>
           </div>
-          <div className="row px-4">
+          <div className="row px-lg-4">
             <div className="col-12 mt-4">
-              {/* <div className="card border-0 py-4 px-3"> */}
               <div className="container">
                 <div className="row">
                   <div className="col-12 col-md-5">
@@ -194,62 +149,73 @@ export default function Profile() {
                         className="text-center my-3"
                         size={150}
                         style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
                         }}
-                        icon={avatarIcon} // Conditionally set the Avatar icon
+                        icon={avatarIcon}
                         alt="Default Avatar"
                       />
-                      <input type="file" className='form-control' onChange={handleImageChange} />
+                      <input type="file" className="form-control" onChange={handleImageChange} />
+                      {isProcessing && (
+                        <div className="progress mt-2">
+                          <div
+                            className="progress-bar progress-bar-striped progress-bar-animated"
+                            role="progressbar"
+                            aria-valuenow="100"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style={{ width: '100%' }}
+                          />
+                        </div>
+                      )}
                     </div>
-
                   </div>
                   <div className="col-12 col-md-7">
                     <div className="card border-0 py-4 px-3">
-                      <form onSubmit={handleSubmit}>
+                      <form >
 
                         <div className="container ">
                           <div className="row pt-2   ">
                             <div className="col-12 col-lg-6">
                               <label for="fullName" className='fw-semibold py-2'>Full Name</label>
-                              <input type="text" name='fullName' className='form-control py-2' placeholder='Full Name' value={state.fullName} onChange={handleChange} />
+                              <input type="text" name='fullName' className='form-control py-2' placeholder='Full Name' value={profile.fullName} onChange={handleChange} />
                             </div>
                             <div className="col-12 col-lg-6">
-                              <label for="email" className='fw-semibold py-2'>Email</label>
-                              <input type="email" name='email' className='form-control py-2' placeholder='Email ' value={state.email} onChange={handleChange} />
+                              <label for="email" className='fw-semibold py-2'>Email <span className='fw-lighter text-danger' style={{ fontSize: '11px' }}>(email can't be change) </span></label>
+                              <input type="email" name='email' className='form-control py-2' placeholder='Email ' value={profile.email} onChange={handleChange} />
                             </div>
                           </div>
                           <div className="row pt-2 ">
                             <div className="col-12 col-lg-6">
                               <label for="number" className='fw-semibold py-2'>Number</label>
-                              <input type="tel" name='number' className='form-control py-2' placeholder='Number ' />
+                              <input type="tel" name='number' className='form-control py-2' placeholder='Number ' value={profile.number} onChange={handleChange} />
                             </div>
                             <div className="col-12 col-lg-6">
-                              <label for="role" className='fw-semibold py-2'>Role</label>
-                              <input type="text" name='role' className='form-control py-2' placeholder='Role ' value={state.role} onChange={handleChange} />
+                              <label for="city" className='fw-semibold py-2'>City</label>
+                              <input type="text" name='city' className='form-control py-2' placeholder='City ' value={profile.city} onChange={handleChange} />
                             </div>
                           </div>
                           <div className="row pt-2 ">
                             <div className="col-12 col-lg-6">
                               <label for="address" className='fw-semibold py-2'>Address</label>
-                              <input type="text" name='address' className='form-control py-2' placeholder='Address ' value={state.address} onChange={handleChange} />
+                              <input type="text" name='address' className='form-control py-2' placeholder='Address ' value={profile.address} onChange={handleChange} />
                             </div>
                             <div className="col-12 col-lg-6">
                               <label for="profession" className='fw-semibold py-2'>Profession</label>
-                              <input type="text" name='profession' className='form-control py-2' placeholder='Profession ' value={state.profession} onChange={handleChange} />
+                              <input type="text" name='profession' className='form-control py-2' placeholder='Profession ' value={profile.profession} onChange={handleChange} />
                             </div>
                           </div>
 
                           <div className="row py-2">
                             <div className="col-12">
                               <label for="bio" className='fw-semibold py-2'>Bio</label>
-                              <textarea rows='5' type="text" name='bio' className='form-control py-2' placeholder='Short bio....' value={state.bio} onChange={handleChange} />
+                              <textarea rows='5' type="text" name='bio' className='form-control py-2' placeholder='Short bio....' value={profile.bio} onChange={handleChange} />
                             </div>
                           </div>
                           <div className="row py-2">
-                            <button className='btn btn-primary w-50 mx-auto' disabled={isProcessing}>
-                              {!isProcessing ? "Save" : <div className='spinner spinner-border spinner-border-sm'></div>}
+                            <button className='btn btn-primary w-50 mx-auto' disabled={isProcessing} onClick={handleUpdate}>
+                              {!isProcessing ? 'save' : <div className="spinner spinner-border spinner-border-sm"></div>}
 
                             </button>
                           </div>
@@ -257,7 +223,6 @@ export default function Profile() {
 
                       </form>
                     </div>
-
                   </div>
                 </div>
               </div>

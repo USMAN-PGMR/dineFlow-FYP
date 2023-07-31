@@ -20,6 +20,8 @@ export default function SecondHeader() {
   // cart
   const { state: { cart } } = CartState()
   const { isAuthenticated, dispatch } = useContext(AuthContext)
+  // ---Dashbord
+  const { userInfo } = useContext(AuthContext)
 
   const handleLogout = () => {
     swal({
@@ -53,17 +55,17 @@ export default function SecondHeader() {
   const items = [
     {
       label: (
-        <a target="_blank" rel="noopener noreferrer" className='text-decoration-none' href="https://www.antgroup.com">
+        <Link to='/UserProfile' rel="noopener noreferrer" className='text-decoration-none' href="https://www.antgroup.com">
           Profile
-        </a>
+        </Link>
       ),
       key: '0',
     },
     {
       label: (
-        <a target="_blank" rel="noopener noreferrer" className='text-decoration-none' href="https://www.aliyun.com">
+        <Link to='/my-order' rel="noopener noreferrer" className='text-decoration-none' href="https://www.aliyun.com">
           My Order
-        </a>
+        </Link>
       ),
       key: '1',
     },
@@ -112,18 +114,27 @@ export default function SecondHeader() {
                     items,
                   }}
                 >
-                  <a onClick={(e) => e.preventDefault()}>
-                    <Avatar
-                      size={32} // Adjust the size of the avatar as per your requirement
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                      icon={<UserOutlined />} // Fallback icon when the user is not logged in
-                      alt="Default Avatar"
-                    />
-                  </a>
+                  <Link onClick={(e) => e.preventDefault()}>
+                    {userInfo && userInfo.image ? ( // Check if the user's image is available
+                      <img
+                        className=''
+                        src={userInfo.image} // Display the user's image
+                        alt="User Avatar"
+                        style={{ width: '30px', height: '30px', borderRadius: '50%' }}
+                      />
+                    ) : (
+                      <Avatar
+                        size={32} // Adjust the size of the avatar as per your requirement
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                        icon={<UserOutlined />} // Fallback icon when the user is not logged in
+                        alt="Default Avatar"
+                      />
+                    )}
+                  </Link>
                 </Dropdown>
               </>
             }
@@ -149,6 +160,10 @@ export default function SecondHeader() {
               <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/register'>Register</Link>
               </li>
+              {userInfo && userInfo.role == "admin" ?
+                <li className="nav-item">
+                  <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/dashbord/home'>Dashboard</Link>
+                </li> : ''}
             </ul>
             <ul className=' my-0 py-0'>
 
@@ -185,18 +200,27 @@ export default function SecondHeader() {
                           items,
                         }}
                       >
-                        <a onClick={(e) => e.preventDefault()}>
-                          <Avatar
-                            size={38} // Adjust the size of the avatar as per your requirement
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}
-                            icon={<UserOutlined />} // Fallback icon when the user is not logged in
-                            alt="Default Avatar"
-                          />
-                        </a>
+                        <Link onClick={(e) => e.preventDefault()}>
+                          {userInfo && userInfo.image ? ( // Check if the user's image is available
+                            <img
+                              className='mb-1'
+                              src={userInfo.image} // Display the user's image
+                              alt="User Avatar"
+                              style={{ width: '34px', height: '34px', borderRadius: '50%' }}
+                            />
+                          ) : (
+                            <Avatar
+                              size={38} // Adjust the size of the avatar as per your requirement
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                              icon={<UserOutlined />} // Fallback icon when the user is not logged in
+                              alt="Default Avatar"
+                            />
+                          )}
+                        </Link>
                       </Dropdown>
                     </>
                   }

@@ -52,7 +52,13 @@ export default function AddProducts() {
   const handleSubmit = e => {
     e.preventDefault();
     setisProcessing(true)
-   
+    if (!image) {
+      console.error("Image not selected");
+      window.toastify("Image not selected", "error")
+      setisProcessing(false);
+      return;
+    }
+
     const storageRef = ref(storage, `images/${image.name + Math.random().toString(10).slice(2)}`);
 
     const uploadTask = uploadBytesResumable(storageRef, image);
@@ -78,36 +84,35 @@ export default function AddProducts() {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setUrl(downloadURL)
-    let { name, title, type, category, slug, stock, price, discount, status, description } = state
+          let { name, title, type, category, slug, stock, price, discount, status, description } = state
 
-    name = name.trim()
-    title = title.trim()
-    type = type.trim()
-    category = category.trim()
-    slug = slug.trim()
-    status = status.trim()
-    description = description.trim()
+          name = name.trim()
+          title = title.trim()
+          type = type.trim()
+          category = category.trim()
+          slug = slug.trim()
+          status = status.trim()
+          description = description.trim()
 
 
-    let ProductsData = { name, title, type, category, slug, stock, price, discount, status, description, image: downloadURL, }
+          let ProductsData = { name, title, type, category, slug, stock, price, discount, status, description, image: downloadURL, }
 
-    ProductsData.dateCreated = serverTimestamp()
-    ProductsData.id = window.getRandomId()
-    // ProductsData.status = "active"
-    ProductsData.createdBy = {
-      email: user.email,
-      uid: user.uid
-    }
-    createDocument(ProductsData)
+          ProductsData.dateCreated = serverTimestamp()
+          ProductsData.id = window.getRandomId()
+          // ProductsData.status = "active"
+          ProductsData.createdBy = {
+            email: user.email,
+            uid: user.uid
+          }
+          createDocument(ProductsData)
 
-  });
-  setisProcessing(false)
-}
-);
+        });
+      }
+    );
 
-          
 
-          // console.log(ProductsData.name)
+
+    // console.log(ProductsData.name)
 
   }
 
@@ -116,11 +121,15 @@ export default function AddProducts() {
     // console.log(formData)
     try {
       await setDoc(doc(firestore, "Products", ProductsData.id), ProductsData);
+      setisProcessing(false)
+
       window.toastify("Product has been added successfully", "success")
       setState(initialState)
       // clearInput()
     } catch (err) {
       console.error(err)
+      setisProcessing(false)
+
       window.toastify("Something went wrong! Product isn't added", "error")
     }
     // setState(initialState)
@@ -139,7 +148,7 @@ export default function AddProducts() {
     <UserOutlined />
   );
 
-  
+
 
   return (
     <>
@@ -223,13 +232,8 @@ export default function AddProducts() {
           </div>
           <div className="col-12 col-lg-4  mt-4">
             <div className="card border-0 px-4 py-3 text-center  align-items-center">
-              {/* <label className="avatar-input-label">
-        <div className="avatar-placeholder">
-          {avatarUrl && <img className='img-fluid w-100' src={avatarUrl} alt="Avatar" />}
-        </div>
-        <input type="file" name='img' className="form-control p-2" onChange={handleAvatarChange} />
-      </label> */}
-             <Avatar
+             
+              <Avatar
                 className="text-center my-3"
                 size={150}
                 style={{

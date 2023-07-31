@@ -14,9 +14,9 @@ import pizzaBack from '../../assets/Barbeque-Chicken.png'
 
 
 const initialState = {
+  username:'',
   email: "",
   password: "",
-  confirmPassword: "",
 };
 export default function Register() {
   const { dispatch } = useContext(AuthContext)
@@ -76,11 +76,18 @@ export default function Register() {
     try {
       // Add a new document in collection "cities"
       await setDoc(doc(firestore, "users", user.uid,), {
-        firstName: "",
+        fullName: '',
         email: user.email,
+        number:'',
+        city:'',
+        address:'',
+        profession:'',
+        bio:'',
+        image:'',
         // passWord:user.password,
         uid: user.uid,
-        role: "user"
+        role: "user",
+        status:'active',
       });
       // window.toastify("A new Doc has been added successfully", "success");
       console.log('doc created')

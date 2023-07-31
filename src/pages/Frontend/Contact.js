@@ -61,25 +61,25 @@ export default function Contact() {
 
          //OR
 
-    let ProductsData = { firstName,lastName,email,subject,message}
+    let Messages = { firstName,lastName,email,subject,message}
 
-    ProductsData.dateSended = serverTimestamp()
-    ProductsData.id = window.getRandomId()
-    // ProductsData.status = "active"
-    // ProductsData.createdBy = {
+    Messages.dateSended = serverTimestamp()
+    Messages.id = window.getRandomId()
+    // Messages.status = "active"
+    // Messages.createdBy = {
     //   email: user.email,
     //   uid: user.uid
     // }
 
-    createDocument(ProductsData)
+    createDocument(Messages)
   }
 
   //----------------Create Document----------------
-const createDocument = async (ProductsData) => {
+const createDocument = async (Messages) => {
   // console.log(formData)
   setisProcessing(true)
   try {
-    await setDoc(doc(firestore, "Messages", ProductsData.id), ProductsData);
+    await setDoc(doc(firestore, "Messages", Messages.id), Messages);
     window.toastify("Your message has been sended successfully", "success")
     setState(initialState)
     // clearInput()
