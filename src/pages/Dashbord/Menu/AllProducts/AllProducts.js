@@ -1,19 +1,24 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react'
+import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { firestore, storage } from '../../../../config/firebase';
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
+import { AuthContext } from '../../../../context/AuthContext';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 
 export default function AllProducts() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [state, setState] = useState({});
+  const [updateProduct, setUpdateProduct] = useState({});
   const [isProcessing, setisProcessing] = useState(false);
-  
+
   const [image, setImage] = useState(null);
+
+  const { user } = useContext(AuthContext);
+
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -31,7 +36,7 @@ export default function AllProducts() {
     return () => unsubscribe();
   }, []);
 
-  
+
   const handleDelete = async (productId) => {
     try {
       const productRef = doc(firestore, 'Products', productId);
@@ -45,21 +50,162 @@ export default function AllProducts() {
   };
 
   const handleChange = (e) => {
-    setState((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
+    setUpdateProduct((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
   };
 
-  const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setImage(e.target.files[0]);
+
+  // const handleImageChange = (e) => {
+  //   if (e.target.files[0]) {
+  //     setImage(e.target.files[0]);
+  //     setUpdateProduct((prevState) => ({
+  //       ...prevState,
+  //       imageUrl: URL.createObjectURL(e.target.files[0]),
+  //     }));
+  //   }
+  // };
+   // Function to upload image to Firebase Storage
+  //  const uploadImageToStorage = async (file) => {
+  //   try {
+  //     const storageRef = ref(storage, `Product_images/${user.uid}`);
+  //     const uploadTask = uploadBytesResumable(storageRef, file);
+
+  //     await uploadTask.on(
+  //       'state_changed',
+  //       (snapshot) => {
+  //         // Handle progress if needed
+  //       },
+  //       (error) => {
+  //         console.error('Error uploading image:', error);
+  //       },
+  //       async () => {
+  //         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+  //         // Update the profile state with the image URL
+  //         setUpdateProduct((UpdateProduct) => ({
+  //           ...UpdateProduct,
+  //           image: downloadURL,
+  //         }));
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //   }
+  // };
+  // Function to handle image upload
+  // const handleImageUpload = async () => {
+  //   if (image) {
+  //     setisProcessing(true);
+  //     await uploadImageToStorage(image);
+  //     setisProcessing(false);
+  //   }
+  // };
+// -----------------HANDLE UPDATED----------------
+// const handleUpdate = async () => {
+//   setisProcessing(true);
+//   try {
+//     const formData = {
+//       ...updateProduct,
+//       dateModified: serverTimestamp(),
+//       emailModified: {
+//         email: user.email,
+//         uid: user.uid,
+//       },
+//     };
+//     if (image) {
+//       // If there is a new image selected, upload it to storage and get the URL
+//       const storageRef = storage.ref();
+//       const imageRef = storageRef.child(`product_images/${image.name}`);
+//       await imageRef.put(image);
+//       const imageUrl = await imageRef.getDownloadURL();
+
+//       // Set the image URL in the formData before updating Firestore
+//       formData.image = imageUrl;
+//     }
+
+//     await setDoc(doc(firestore, "Products", formData.id), formData, { merge: true });
+//     // ---SET ACCORDING TO CALENDER SELECTION---
+   
+//     window.toastify("Todo has been updated successfully", "success");
+//   } catch (error) {
+//     console.error(error);
+//     window.toastify("Something went wrong! Todo isn't added", "error");
+//   }
+//   setisProcessing(null);
+// };
+const handleUpdate = async (e) => {
+  e.preventDefault();
+  setisProcessing(true);
+  try {
+    const formData = {
+      ...updateProduct,
+      dateModified: serverTimestamp(),
+      emailModified: {
+        email: user.email,
+        uid: user.uid,
+      },
+    };
+
+    // Upload the image first, if available
+    if (image) {
+      const storageRef = ref(storage, `Product_images/${user.uid}`);
+      const uploadTask = uploadBytesResumable(storageRef, image);
+
+      await uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          // Handle progress if needed
+        },
+        (error) => {
+          console.error('Error uploading image:', error);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          // Update the formData with the new image URL
+          formData.image = downloadURL;
+          // Update the Firestore document with the new formData
+          await updateDoc(doc(firestore, "Products", formData.id), formData);
+          window.toastify("Product has been updated successfully", "success");
+          setUpdateProduct({}); // Reset the updateProduct state to clear the form after successful update
+          setisProcessing(false);
+        }
+      );
+    } else {
+      // If no new image is selected, update the Firestore document with the existing formData
+      await updateDoc(doc(firestore, "Products", formData.id), formData);
+      window.toastify("Product has been updated successfully", "success");
+      setUpdateProduct({}); // Reset the updateProduct state to clear the form after successful update
+      setisProcessing(false);
     }
-  };
+  } catch (error) {
+    console.error(error);
+    window.toastify("Something went wrong! Product update failed", "error");
+    setisProcessing(false);
+  }
+};
 
- 
-  
 
-  
 
-  
+
+
+
+// Function to handle image change
+const handleImageChange = (e) => {
+  if (e.target.files[0]) {
+    setImage(e.target.files[0]);
+  }
+};
+
+
+
+const avatarIcon = updateProduct.image ? (
+  <img className="img-fluid w-100" src={updateProduct.image} alt="Selected Avatar" />
+) : (
+  <UserOutlined />
+);
+
+
+
+
+
   return (
     <>
       <div className="container p-3">
@@ -76,8 +222,10 @@ export default function AllProducts() {
               <div className="card border-0 py-4 px-2">
                 {!isLoading ? (
                   products.length > 0 ? (
+                    <div className="table-responsive">
 
-                    <Table className="table ">
+
+                    <Table className="table  ">
                       <Thead className='bg-dark'>
                         <Tr>
                           <Th scope="col">Image</Th>
@@ -127,7 +275,7 @@ export default function AllProducts() {
                                   <i className="fa-solid fa-ellipsis-vertical"></i>
                                 </button>
                                 <ul className="dropdown-menu dropdown-menu-width  ">
-                                  <li><Link className="dropdown-item " data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setState(item)} >Edit</Link></li>
+                                  <li><Link className="dropdown-item " data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setUpdateProduct(item)} >Edit</Link></li>
                                   <li><Link className="dropdown-item " onClick={() => handleDelete(item.id)} >Delete</Link></li>
 
                                 </ul>
@@ -138,6 +286,7 @@ export default function AllProducts() {
 
                       </Tbody>
                     </Table>
+                  </div>
                   ) : (
                     <p className="text-center text-danger fs-4">No Product Is Available</p>
 
@@ -162,99 +311,86 @@ export default function AllProducts() {
                 </div>
                 <div className="modal-body">
                   <div className="container">
-                    <div className="row ">
-                      <div className="col-12  mt-4">
-                        <div className="card border-0 px-4 py-3 text-center align-items-center">
-                          { image ? (
-                            <img
-                              src={ URL.createObjectURL(image)}
-                              alt="Product Avatar"
-                              style={{ width: '150px', height: '150px', borderRadius: '50%' }}
-                            />
-                          ) : (
-                            <Avatar
-                              className="text-center my-3"
-                              size={150}
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}
-                              icon={<UserOutlined />}
-                              alt="Default Avatar"
-                            />
-                          )}
-                          <input type="file" className="form-control" onChange={handleImageChange} />
-                        </div>
+                    <div className="row">
+                      <div className="col-4 offset-4 text-center  align-items-end">
+                      <Avatar
+                        className="text-center my-3 mx-auto"
+                        size={150}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                        icon={avatarIcon}
+                        alt="Default Avatar"
+                      />
+                      <input type="file" className="form-control" onChange={handleImageChange} />
                       </div>
-
-
+                    </div>
+                    <div className="row ">
                       <div className="col-12   mt-4  ">
                         <div className="card  border-0 px-2 px-lg-4 py-3">
                           <form >
                             <div className="row pt-2 ">
                               <div className="col-12 col-lg-6">
                                 <label for="name" className='fw-semibold py-2'>Name</label>
-                                <input type="text" name='name' className='form-control py-2' placeholder='Name' value={state.name} onChange={handleChange} />
+                                <input type="text" name='name' className='form-control py-2' placeholder='Name' value={updateProduct.name} onChange={handleChange} />
                               </div>
                               <div className="col-12 col-lg-6">
                                 <label for="title" className='fw-semibold py-2'>Title</label>
-                                <input type="text" name='title' className='form-control py-2' placeholder='Title ' value={state.title} onChange={handleChange} />
+                                <input type="text" name='title' className='form-control py-2' placeholder='Title ' value={updateProduct.title} onChange={handleChange} />
                               </div>
                             </div>
                             <div className="row pt-2 ">
                               <div className="col-12 col-lg-6">
                                 <label for="type" className='fw-semibold py-2'>Type</label>
-                                <input type="text" name='type' className='form-control py-2' placeholder='Type' value={state.type} onChange={handleChange} />
+                                <input type="text" name='type' className='form-control py-2' placeholder='Type' value={updateProduct.type} onChange={handleChange} />
                               </div>
                               <div className="col-12 col-lg-6">
                                 <label for="catetory" className='fw-semibold py-2'>Catetory</label>
-                                <input type="text" name='category' className='form-control py-2' placeholder='Catetory ' value={state.category} onChange={handleChange} />
+                                <input type="text" name='category' className='form-control py-2' placeholder='Catetory ' value={updateProduct.category} onChange={handleChange} />
                               </div>
                             </div>
                             <div className="row pt-2 ">
                               <div className="col-12 col-lg-6">
                                 <label for="slug" className='fw-semibold py-2'>Slug</label>
-                                <input type="text" name='slug' className='form-control py-2' placeholder='Slug' value={state.slug} onChange={handleChange} />
+                                <input type="text" name='slug' className='form-control py-2' placeholder='Slug' value={updateProduct.slug} onChange={handleChange} />
                               </div>
                               <div className="col-12 col-lg-6">
                                 <label for="stock" className='fw-semibold py-2'>Stock</label>
-                                <input type="number" name='stock' className='form-control py-2' placeholder='Stock ' value={state.stock} onChange={handleChange} />
+                                <input type="number" name='stock' className='form-control py-2' placeholder='Stock ' value={updateProduct.stock} onChange={handleChange} />
                               </div>
                             </div>
                             <div className="row pt-2 ">
                               <div className="col-12 col-lg-6">
                                 <label for="price" className='fw-semibold py-2'>Price</label>
-                                <input type="number" name='price' className='form-control py-2' placeholder='Price' value={state.price} onChange={handleChange} />
+                                <input type="number" name='price' className='form-control py-2' placeholder='Price' value={updateProduct.price} onChange={handleChange} />
                               </div>
                               <div className="col-12 col-lg-6">
                                 <label for="discount" className='fw-semibold py-2'>Discount</label>
-                                <input type="number" name='discount' className='form-control py-2' placeholder='Discount ' value={state.discount} onChange={handleChange} />
+                                <input type="number" name='discount' className='form-control py-2' placeholder='Discount ' value={updateProduct.discount} onChange={handleChange} />
                               </div>
                             </div>
                             <div className="row pt-2">
-                              <div className="col-12 ">
+                              <div className="col-12  ">
                                 <label htmlFor="status" className='fw-semibold py-2'>Status</label>
-                                <select name="status" className='form-control py-2' value={state.status} onChange={handleChange} >
+                                <select name="status" className='form-control py-2' value={updateProduct.status} onChange={handleChange} >
                                   <option value="none">Select The Status</option>
                                   <option value="active">Active</option>
                                   <option value="inactive">Inactive</option>
                                   {/* <option value="Country 3">Country 3</option> */}
                                 </select>
                               </div>
-                              {/* <div className="col-12 col-lg-6">
-                                <label for="image" className='fw-semibold py-2'>Image</label>
-                                <input type="file" name='image' className='form-control py-2' placeholder='image ' value={image} onChange={handleImageChange} />
-                              </div> */}
+                             
                             </div>
                             <div className="row py-2">
                               <div className="col-12">
                                 <label for="description" className='fw-semibold py-2'>Description</label>
-                                <textarea rows='5' type="text" name='description' className='form-control py-2' placeholder='Add The Description' value={state.description} onChange={handleChange} />
+                                <textarea rows='5' type="text" name='description' className='form-control py-2' placeholder='Add The Description' value={updateProduct.description} onChange={handleChange} />
                               </div>
                             </div>
                             <div className="row py-2">
-                              <button className='btn btn-primary w-50 mx-auto'  disabled={isProcessing}>
+                              <button className='btn btn-primary w-50 mx-auto' onClick={(e) => handleUpdate(e)} disabled={isProcessing}>
                                 {!isProcessing ? "Update Product" : <div className='spinner spinner-border spinner-border-sm'></div>}
 
                               </button>

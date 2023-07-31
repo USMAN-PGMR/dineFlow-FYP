@@ -16,26 +16,25 @@ export default function Profile() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Function to fetch admin data
-const fetchAdminData = async () => {
-  try {
-    const querySnapshot = await getDocs(collection(firestore, 'users'));
-    const adminData = querySnapshot.docs.find((doc) => doc.data().role === 'admin');
+  const fetchAdminData = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(firestore, 'users'));
+      const adminData = querySnapshot.docs.find((doc) => doc.data().role === 'admin');
 
-    if (adminData) {
-      setProfile(adminData.data());
-    } else {
-      // Handle case when admin data is not found
+      if (adminData) {
+        setProfile(adminData.data());
+      } else {
+        // Handle case when admin data is not found
+      }
+    } catch (error) {
+      console.error('Error fetching admin data:', error);
     }
-  } catch (error) {
-    console.error('Error fetching admin data:', error);
-  }
-};
+  };
 
-// Fetch admin data when the component mounts
-useEffect(() => {
-  fetchAdminData();
-}, []);
-
+  // Fetch admin data when the component mounts
+  useEffect(() => {
+    fetchAdminData();
+  }, []);
 
   // Function to upload image to Firebase Storage
   const uploadImageToStorage = async (file) => {
@@ -52,20 +51,28 @@ useEffect(() => {
           console.error('Error uploading image:', error);
         },
         async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          // Update the profile state with the image URL
-          setProfile((prevProfile) => ({
-            ...prevProfile,
-            image: downloadURL,
-          }));
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log('Image URL:', downloadURL);
+
+            // Update the profile state with the image URL
+            setProfile((prevProfile) => ({
+              ...prevProfile,
+              image: downloadURL,
+            }));
+          } catch (error) {
+            console.error('Error getting download URL:', error);
+          }
         }
       );
     } catch (error) {
       console.error('Error uploading image:', error);
     }
   };
+
   // Function to handle image upload
   const handleImageUpload = async () => {
+    setIsProcessing(true)
     if (image) {
       setIsProcessing(true);
       await uploadImageToStorage(image);
@@ -73,12 +80,13 @@ useEffect(() => {
     }
   };
 
-
   // Define handleChange function
   const handleChange = (e) => {
-    setProfile((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
+    setProfile((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
   };
-
 
   // Function to handle form submit for updating user data
   const handleUpdate = async (e) => {
@@ -118,16 +126,11 @@ useEffect(() => {
     }
   };
 
-
-
-
   const avatarIcon = profile.image ? (
     <img className="img-fluid w-100" src={profile.image} alt="Selected Avatar" />
   ) : (
     <UserOutlined />
   );
-
-
   return (
     <>
       <div className="container p-3">
