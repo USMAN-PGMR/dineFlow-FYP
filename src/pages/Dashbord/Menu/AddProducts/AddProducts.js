@@ -23,6 +23,7 @@ const initialState = {
   discount: '',
   status: "none",
   description: "",
+  // image:'',
   // time:'',
 }
 
@@ -59,7 +60,7 @@ export default function AddProducts() {
       return;
     }
 
-    const storageRef = ref(storage, `images/${image.name + Math.random().toString(10).slice(2)}`);
+    const storageRef = ref(storage, `Product_images/${image.name + Math.random().toString(10).slice(2)}`);
 
     const uploadTask = uploadBytesResumable(storageRef, image);
 
@@ -124,6 +125,7 @@ export default function AddProducts() {
       setisProcessing(false)
 
       window.toastify("Product has been added successfully", "success")
+      setImage(null);
       setState(initialState)
       // clearInput()
     } catch (err) {
@@ -211,7 +213,6 @@ export default function AddProducts() {
                       <option value="none">Select The Status</option>
                       <option value="active">Active</option>
                       <option value="inactive">Inactive</option>
-                      {/* <option value="Country 3">Country 3</option> */}
                     </select>
                   </div>
                 </div>
