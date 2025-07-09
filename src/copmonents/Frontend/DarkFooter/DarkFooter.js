@@ -128,7 +128,7 @@ export default function DarkFooter() {
 
         </div>
         <hr />
-        <p className='text-center text-lg-start mb-0 text-white'>Coptright &copy; 2023 . All Right Reserved</p>
+        <p className='text-center text-lg-start mb-0 text-white'>Coptright &copy; 2025 . All Right Reserved</p>
       </div>
     </div>
 

@@ -93,9 +93,9 @@ export default function HeroSection() {
                                 </div>
                             </div>
 
-                            <div className="d-none d-lg-block col-lg-7   bg-light   " >
-                                <div className="row px-3  pt-5 mt-5 ">
-                                    <h1 style={{ fontFamily: 'fantasy', fontSize: '60px', }} className="title pt-5 ">Celebrating 100 Years of Cheesy Pizza</h1>
+                            <div className="d-none d-lg-block col-lg-7   bg-light text-start  " >
+                                <div className="row px-3  pt-5 mt-5  text-start ">
+                                    <h1 style={{ fontFamily: 'fantasy', fontSize: '60px', }} className="title pt-5 text-start ">Celebrating 100 Years of Cheesy Pizza</h1>
                                     <h4 className='py-2' style={{ fontFamily: 'fantasy' }}>Join our grand opening tonight for free pizza</h4>
                                     <p className='text-secondary me-5'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cumque ipsam ipsa in voluptate odio tempore! Quia facilis nobis rerum porro. Dicta molestias, vel iure ipsum neque quo ex est nemo.</p>
                                     <div className="col-3 ">

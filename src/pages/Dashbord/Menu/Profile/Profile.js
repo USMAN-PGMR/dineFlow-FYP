@@ -15,70 +15,75 @@ export default function Profile() {
   const [image, setImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Function to fetch admin data
-  const fetchAdminData = async () => {
+  
+  // Function to fetch user data
+  const fetchUserData = async () => {
     try {
-      const querySnapshot = await getDocs(collection(firestore, 'users'));
-      const adminData = querySnapshot.docs.find((doc) => doc.data().role === 'admin');
-
-      if (adminData) {
-        setProfile(adminData.data());
+      const docRef = doc(firestore, 'users', user.uid);
+      const docSnapshot = await getDoc(docRef);
+      if (docSnapshot.exists()) {
+        setProfile(docSnapshot.data());
       } else {
-        // Handle case when admin data is not found
+        // If user data is not found, create a new empty profile for the user
+        await setDoc(docRef, {});
+        setProfile({});
       }
     } catch (error) {
-      console.error('Error fetching admin data:', error);
+      console.error('Error fetching user data:', error);
     }
   };
 
-  // Fetch admin data when the component mounts
+  // Fetch user data when the component mounts
   useEffect(() => {
-    fetchAdminData();
+    fetchUserData();
   }, []);
 
-  // Function to upload image to Firebase Storage
-  const uploadImageToStorage = async (file) => {
-    try {
-      const storageRef = ref(storage, `admin_images/${user.uid}`);
+  
+  
+
+// -------------------Function to upload image to Firebase Storage
+const uploadImageToStorage = async (file) => {
+  console.log('Uploading image:', file);
+
+  try {
+      const storageRef = ref(storage, `user_images/${user.uid}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       await uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          // Handle progress if needed
-        },
-        (error) => {
-          console.error('Error uploading image:', error);
-        },
-        async () => {
-          try {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            console.log('Image URL:', downloadURL);
-
-            // Update the profile state with the image URL
-            setProfile((prevProfile) => ({
-              ...prevProfile,
-              image: downloadURL,
-            }));
-          } catch (error) {
-            console.error('Error getting download URL:', error);
+          'state_changed',
+          (snapshot) => {
+              // Handle progress if needed
+          },
+          (error) => {
+              console.error('Error uploading image:', error);
+          },
+          async () => {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              // Update the profile state with the image URL
+              setProfile((prevProfile) => ({
+                  ...prevProfile,
+                  image: downloadURL,
+              }));
           }
-        }
       );
-    } catch (error) {
+  } catch (error) {
       console.error('Error uploading image:', error);
-    }
-  };
+  }
+};
 
-  // Function to handle image upload
-  const handleImageUpload = async () => {
-    setIsProcessing(true)
-    if (image) {
+
+
+//-------------- Function to handle image upload
+const handleImageUpload = async () => {
+  if (image) {
       setIsProcessing(true);
       await uploadImageToStorage(image);
       setIsProcessing(false);
-    }
-  };
+  }
+};
+
+
+
 
   // Define handleChange function
   const handleChange = (e) => {
@@ -88,43 +93,48 @@ export default function Profile() {
     }));
   };
 
-  // Function to handle form submit for updating user data
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setIsProcessing(true);
+    
+//------------------- Function to handle form submit for updating user data
+const handleUpdate = async (e) => {
+  e.preventDefault();
+  console.log('Form submit triggered');
+  setIsProcessing(true);
 
-    // Upload the image first, if available
-    if (image) {
+  // Upload the image first, if available
+  if (image) {
       await handleImageUpload();
-    }
+  }
 
-    // Now, update the user profile
-    try {
+  // Now, update the user profile
+  try {
       const formData = {
-        ...profile,
-        dateModified: serverTimestamp(),
-        emailModified: {
+          ...profile,
+          dateModified: serverTimestamp(),
           email: user.email,
-          uid: user.uid,
-        },
+          emailModified: {
+              email: user.email,
+              uid: user.uid,
+          },
       };
 
       await setDoc(doc(firestore, 'users', user.uid), formData, { merge: true });
       setProfile(formData); // Update the local state with the new data
       window.toastify('Your Profile has been updated successfully', 'success');
-    } catch (error) {
+  } catch (error) {
       console.error(error);
       window.toastify('Something went wrong! Profile not updated', 'error');
-    }
-    setIsProcessing(false);
-  };
+  }
+  setIsProcessing(false);
+};
 
-  // Function to handle image change
+
+
+  //------------------- Function to handle image change
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
-      setImage(e.target.files[0]);
+        setImage(e.target.files[0]);
     }
-  };
+};
 
   const avatarIcon = profile.image ? (
     <img className="img-fluid w-100" src={profile.image} alt="Selected Avatar" />

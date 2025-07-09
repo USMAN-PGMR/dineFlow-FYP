@@ -1,10 +1,9 @@
 import React, { useContext } from 'react'
-import { IoIosSearch } from 'react-icons/io';
 import { BsHandbag } from 'react-icons/bs';
 import { Link } from 'react-router-dom'
 import { Avatar, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-
+import logo from '../../../assets/logoDark.png'
 import { BiLogInCircle } from 'react-icons/bi';
 import swal from 'sweetalert';
 import { signOut } from 'firebase/auth';
@@ -84,7 +83,7 @@ export default function SecondHeader() {
 
       <nav className="navbar secondNav navbar-expand-lg py-0  bg-transparent  ">
         <div className="container px-0 py-0 my-0 ">
-          <a className="navbar-brand mx-0   px-0" ><img className='w-75 ps-2 py-1  ' src="http://androthemes.com/themes/react/slices/assets/img/logo.png" alt="" /></a>
+          <Link to='/' className="navbar-brand mx-0   px-0" ><img className='w-75 ps-2 py-1  ' src={logo} alt="" /></Link>
           {/* only on small screen */}
           <div className="d-column align-items-end  justify-content-end  d-sm-block d-lg-none  ">
 
@@ -152,14 +151,14 @@ export default function SecondHeader() {
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/about'>About</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/contact'>Contact Us</Link>
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/contact'>Contact </Link>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/login'>Login</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/register'>Register</Link>
-              </li>
+              </li> */}
               {userInfo && userInfo.role == "admin" ?
                 <li className="nav-item">
                   <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/dashbord/home'>Dashboard</Link>

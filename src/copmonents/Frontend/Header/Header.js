@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { BsHandbag } from 'react-icons/bs';
 import { BiLogInCircle } from 'react-icons/bi';
 // import { RxAvatar } from 'react-icons/rx';\
@@ -86,7 +86,7 @@ export default function Header() {
 
       <nav className="navbar navbar-expand-lg py-0 shadow-sm  ">
         <div className="container-fluid px-0 py-0 my-0 ">
-          <a className="navbar-brand mx-0 mx-lg-4  px-0" ><img className='img-fluid ps-2 py-1  ' src={darkLight} alt="" /></a>
+          <Link to='/' className="navbar-brand mx-0 mx-lg-4  px-0" ><img className='img-fluid ps-2 py-1  ' src={darkLight} alt="" /></Link>
           <div className="d-flex  justify-content-end  d-sm-block d-lg-none  ">
 
             <Link to='/cart' className='btn py-0 px-0 mx-0 position-relative' >
@@ -152,12 +152,21 @@ export default function Header() {
                 <Link className="nav-link active fw-semibold mx-lg-2" aria-current="page" to='/'>Home</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/about'>About</Link>
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/allProducts'>All Items</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/contact'>Contact Us</Link>
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/jobs'>Jobs </Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/faqs'>FAQ's </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/about'>About </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/contact'>Contact </Link>
+              </li>
+              {/* <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/login'>Login</Link>
               </li>
               <li className="nav-item">
@@ -168,7 +177,7 @@ export default function Header() {
               </li>
               <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/cards-local'>Cards Local</Link>
-              </li>
+              </li> */}
               {userInfo && userInfo.role == "admin" ?
                 <li className="nav-item">
                   <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/dashbord/home'>Dashboard</Link>

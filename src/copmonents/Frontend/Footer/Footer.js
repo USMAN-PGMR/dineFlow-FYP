@@ -1,12 +1,12 @@
 import React from 'react'
-
+import logo from '../../../assets/logofooter.png'
 export default function Footer() {
   return (
     <><div className="footer bg-light ">
       <div className="container py-5">
         <div className="row pt-4">
           <div className="col-12 col-md-6 text-center text-lg-start">
-            <img src="http://androthemes.com/themes/react/slices/assets/img/logo.png" alt="" />
+            <img src={logo} alt="" />
           </div>
           <div className="col-12 col-md-6 text-center text-lg-end mt-md-3  ">
             <img className='btn w-25 mx-0 px-0 mt-1' src="http://androthemes.com/themes/react/slices/assets/img/android.png" alt="" />
@@ -127,7 +127,7 @@ export default function Footer() {
 
         </div>
         <hr />
-        <p className='text-center text-lg-start mb-0' style={{ color: '#313131e3' }}>Coptright &copy; 2023 . All Right Reserved</p>
+        <p className='text-center text-lg-start mb-0' style={{ color: '#313131e3' }}>Coptright &copy; 2025 . All Right Reserved</p>
       </div>
     </div>
     </>

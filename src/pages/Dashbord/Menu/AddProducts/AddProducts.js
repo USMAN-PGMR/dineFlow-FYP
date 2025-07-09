@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext,  useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../../../context/AuthContext'
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
 import { firestore, storage } from '../../../../config/firebase'
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {  ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 // import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 

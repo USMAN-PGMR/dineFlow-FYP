@@ -40,11 +40,11 @@ export default function UserProfile() {
     // -------------------Function to upload image to Firebase Storage
     const uploadImageToStorage = async (file) => {
         console.log('Uploading image:', file);
-
         try {
+            setIsProcessing(true)
             const storageRef = ref(storage, `user_images/${user.uid}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
-
+            
             await uploadTask.on(
                 'state_changed',
                 (snapshot) => {
@@ -62,6 +62,8 @@ export default function UserProfile() {
                     }));
                 }
             );
+
+            setIsProcessing(false)
         } catch (error) {
             console.error('Error uploading image:', error);
         }

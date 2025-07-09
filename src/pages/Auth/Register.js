@@ -5,7 +5,7 @@ import DarkFooter from '../../copmonents/Frontend/DarkFooter'
 import { Link } from 'react-router-dom'
 import { auth, firestore } from "../../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
 
 // assets
@@ -88,6 +88,7 @@ export default function Register() {
         uid: user.uid,
         role: "user",
         status:'active',
+        dateCreated:serverTimestamp(),
       });
       // window.toastify("A new Doc has been added successfully", "success");
       console.log('doc created')

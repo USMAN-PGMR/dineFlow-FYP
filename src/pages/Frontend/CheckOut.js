@@ -1,35 +1,54 @@
-import React from 'react'
+import React, {  useContext, useState } from 'react'
 import TopBar from '../../copmonents/Frontend/TopBar/TopBar'
 import AboutHeader from '../../copmonents/Frontend/AboutHeader/AboutHeader'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link,  useNavigate } from 'react-router-dom'
 import { Table, Tbody, Td, Th, Thead, Tr, } from 'react-super-responsive-table'
 import DarkFooter from '../../copmonents/Frontend/DarkFooter/DarkFooter'
 import { CartState } from '../../context/CartContext'
+import { firestore } from '../../config/firebase'
+import { addDoc, collection,  serverTimestamp,  } from 'firebase/firestore'
+import { AuthContext } from '../../context/AuthContext'
+// import firebase from 'firebase/app';
 
 
 
 export default function CheckOut() {
+  const [isProcessing, setisProcessing] = useState(false)
+  const { user } = useContext(AuthContext);
   const { state: { cart }, dispatch } = CartState();
+  // console.log('cart', cart)
   const navigate = useNavigate();
 
-  // handleComfirm
-  const handleConfirmClick = () => {
-    // Your code to handle the order confirmation goes here
-    // For example, you can send the order data to your backend
-    // After the order is successfully placed, dispatch the "ORDERED" action to clear the cart
-
-    // Dispatch the "ORDERED" action to clear the cart after the order is placed
-      dispatch({ type: "ORDERED" });
+const handleConfirmClick = async () => {
+  setisProcessing(true);
+  try {
+    // Prepare the cart data for saving
+    const cartData = cart.map((item) => ({
       
-      window.toastify("Your Order is succesfully Sended","success");
-      
-      navigate("/");
-     
-  
-  
-    
-  };
+      dateSended: new Date(),
+      status: 'pending',
+      email: user.email,
+      type: item.type,
+      title: item.title,
+      name: item.name, // Ensure you are including the correct property for the item name
+      price: item.price,
+      qty: item.qty,
+      total: calculateTotalPrice(item),
+      grandTotal: cartTotal.total,
+    }));
 
+    // Save the cart data to Firestore using addDoc
+    await addDoc(collection(firestore, 'carts'), {userUid:user.uid,dateSended:serverTimestamp(), items: cartData });
+
+    dispatch({ type: 'ORDERED' });
+    window.toastify('Your Order is successfully Sent', 'success');
+    navigate('/');
+  } catch (err) {
+    console.error(err);
+    window.toastify("Something went wrong! Order isn't sent", 'error');
+  }
+  setisProcessing(false);
+};
 
   // --------function to handle the calculations----------
   const taxRate = 0.07; // Assuming tax rate is 7%, change it accordingly
@@ -199,7 +218,7 @@ export default function CheckOut() {
                       <Tr  >
                         {/* <Th scope="row">1</Th> */}
                         <Td colspan="" className=''  >
-                          <h6 style={{ fontFamily: 'fantasy' }}>{item.name}</h6>
+                          <h6 style={{ fontFamily: 'fantasy' }}>{item.type}</h6>
                           <span className='d-inline-block '>
                             {item.title}
                             {/* <p>tytytyt</p> */}
@@ -288,7 +307,7 @@ export default function CheckOut() {
                       <Tr  >
                         {/* <Th scope="row">1</Th> */}
                         <Td colspan="" className=''  >
-                          <h6 style={{ fontFamily: 'fantasy' }}>{item.name}</h6>
+                          <h6 style={{ fontFamily: 'fantasy' }}>{item.type}</h6>
                           <span className='d-inline-block '>
                             {item.title}
                             {/* <p>tytytyt</p> */}
@@ -320,8 +339,10 @@ export default function CheckOut() {
                       </div>
                       <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" className="btn btn-success"  data-bs-dismiss="modal" onClick={handleConfirmClick}>Confirm</button>
-                      </div>
+                        <button className='btn btn-success ' data-bs-dismiss="modal"  onClick={handleConfirmClick} disabled={isProcessing}>
+                    {!isProcessing ? "Confirm" : <div className='spinner spinner-border mx-3 spinner-border-sm'></div>}
+
+                  </button> </div>
                     </div>
                   </div>
                 </div>

@@ -1,11 +1,31 @@
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import React, { createContext, useContext, useEffect, useReducer, useState } from 'react';
-import productData from '../config/productData';
+import { firestore } from '../config/firebase';
+// import productData from '../config/productData';
 // import CartReducer from './CartReducer ';
 
 const Cart = createContext();
 
 export default function CartContextProvider({ children }) {
-    const products=productData
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(collection(firestore, 'Products'), orderBy('dateCreated', 'asc')),
+      (querySnapshot) => {
+        const productsData = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setProducts(productsData);
+        // setIsLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+    // const products=productData
 
   const CartReducer=(state,action)=>{
     switch (action.type) {
@@ -54,7 +74,7 @@ export default function CartContextProvider({ children }) {
   const initialCart = JSON.parse(localStorage.getItem('cart')) || [];
 
 
-  console.log('products', products)
+  // console.log('products', products)
 
   const [state,dispatch]=useReducer(CartReducer,{
     products:products,
@@ -65,7 +85,7 @@ export default function CartContextProvider({ children }) {
     localStorage.setItem('cart', JSON.stringify(state.cart));
   }, [state.cart]);
 
-console.log('state =>', state)
+// console.log('state =>', state)
 // Load cart data from localStorage on component mount
 
 

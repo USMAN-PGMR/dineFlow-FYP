@@ -84,12 +84,11 @@ export default function AboutHeader() {
 
       <nav className="navbar secondNav navbar-expand-lg py-0  bg-transparent  ">
         <div className="container px-0 py-0 my-0 ">
-          <a className="navbar-brand mx-0   px-0" ><img className='w-75 ps-2 py-1  ' src={lightLogo} alt="" /></a>
-          {/* only on small screen */}
+          <Link to='/' className="navbar-brand mx-0   px-0" ><img className='w-75 ps-2 py-1  ' src={lightLogo} alt="" /></Link>
+         
           <div className="d-column align-items-end  justify-content-end  d-sm-block d-lg-none  ">
 
-            {/* <i className='btn btnNavAbout py-0 px-0 mx-0'style={{fontSize:'20px'}}><BsHandbag /></i>
-            <i className='btn btnNavAbout py-0  pe-0 ps-1   mx-0' style={{fontSize:'20px'}}><  IoIosSearch /></i> */}
+            
 
             <Link to='/cart' className='btnbtnNavAbout text-decoration-none text-white py-0 px-0 mx-0 position-relative' >
               <span style={{ fontSize: '20px' }}>
@@ -155,14 +154,14 @@ export default function AboutHeader() {
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/about'>About</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/contact'>Contact Us</Link>
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/contact'>Contact </Link>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/login'>Login</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/auth/register'>Register</Link>
-              </li>
+              </li> */}
               {userInfo && userInfo.role == "admin" ?
                 <li className="nav-item">
                   <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/dashbord/home'>Dashboard</Link>

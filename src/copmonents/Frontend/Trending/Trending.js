@@ -1,10 +1,38 @@
 import { SplideTrack, Splide, SplideSlide } from '@splidejs/react-splide'
-import React from 'react';
-import productData from '../../../config/productData';
+import React, { useEffect, useState } from 'react';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+
+// import productData from '../../../config/productData';
+import { firestore } from '../../../config/firebase';
+import { CartState } from '../../../context/CartContext';
 
 // import papperoniPiza from '../../../assets/5-Pepperoni Pizza.png';
 export default function Trending() {
-  const productSlider=productData;
+  // const productSlider=productData;
+  const {state :{cart},dispatch} = CartState();
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(
+        collection(firestore, 'Products'),
+      where('status', '==', 'active'),
+      //  orderBy('dateCreated', 'asc')
+       ),
+      (querySnapshot) => {
+        const productsData = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setProducts(productsData);
+        setIsLoading(false);
+        // setIsLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
   return (
     <div className="container-fluid mt-5 py-5">
       <div className="row">
@@ -17,6 +45,11 @@ export default function Trending() {
           <p className='text-secondary'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy</p>
         </div>
       </div>
+      {isLoading ? (
+       <div className="text-center">
+       <div className="spinner spinner-grow"></div>
+     </div>
+      ) : (
       <div className="row mb-5">
         <div className=" trending  ">
           <Splide hasTrack={false}
@@ -48,8 +81,8 @@ export default function Trending() {
             aria-label="My Favorite Images" >
             <SplideTrack>
 
-              {productSlider.map((product, index) => (
-              <SplideSlide >
+              {products.map((product, i) => (
+              <SplideSlide  >
                 <div className="card  border-0 mb-5 bg-transparent text-center " >
                   <img className='img-fluid bg-transparent ' src={product.image} alt="" style={{ width: '80%', margin: '0 auto', position: 'relative', bottom: '-60px', zIndex: '100000000' }} />
                   <div className="card bg-light text-center px-2 px-lg-4 py-5  border-0 shadow-sm  px-2 px-md-4 " >
@@ -60,17 +93,39 @@ export default function Trending() {
                       <div className="row">
                         <div className="col-5 text-start">
                           {/* <div className="card  rounded-5    " > */}
-                           <span className='text-start   bg-white rounded-5 py-2 px-4  d-inline-block  ' style={{ boxShadow: '0 0 25px rgb(235, 226, 226)' }}><b className='px-1'>{product.price}</b></span>
+                           <span className='text-start   bg-white rounded-5 py-2 px-4  d-inline-block  ' style={{ boxShadow: '0 0 25px rgb(235, 226, 226)' }}><b className='px-1'>{product.price}$</b></span>
                           {/* </div> */}
                         </div>
                         <div className="col-7 text-end ">
+                        {
+                  cart.some(p=>p.id === product.id)?(
 
-                          <button
-                            className="zoom-button   bg-danger  py-2 mt-1 mb-0 "
-                            style={{ boxShadow: '0 0 25px rgb(255, 168, 168)' }}
-                          >
-                            ORDER <i class="fa-solid fa-cart-shopping ps-1"></i>
-                          </button>
+                <button 
+                className="zoom-button     py-2 mt-1 mb-0 "
+                style={{ boxShadow: '0 0 25px rgb(255, 168, 168)',backgroundColor:'#ff477e' }}
+                 onClick={()=>{
+                  dispatch({
+                    type:"REMOVE_FROM_CART",
+                    payload:product,
+                  })
+                }} >
+                  Remove <i class="fa-solid fa-cart-shopping ps-1"></i>
+                </button>
+                  ):(
+
+                <button  className="zoom-button bg-danger   py-2 mt-1 mb-0 "
+                style={{ boxShadow: '0 0 25px rgb(255, 168, 168)' }} 
+                onClick={()=>{
+                  dispatch({
+                    type:"ADD_TO_CART",
+                    payload:product,
+                  })
+                }}
+                >
+                  ADD <i class="fa-solid fa-cart-shopping ps-1"></i>
+                </button>
+                  )
+                }
                         </div>
                       </div>
 
@@ -91,6 +146,7 @@ export default function Trending() {
           </Splide>
         </div>
       </div>
+      )}
     </div>
   )
 }

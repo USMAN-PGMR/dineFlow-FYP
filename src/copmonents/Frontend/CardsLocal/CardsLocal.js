@@ -1,12 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { CartState } from '../../../context/CartContext';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { firestore } from '../../../config/firebase';
 
 // let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
 export default function CardsLocal() {
-  const {state :{products,cart},dispatch} = CartState();
+  const {state :{cart},dispatch} = CartState();
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(collection(firestore, 'Products'), orderBy('dateCreated', 'asc')),
+      (querySnapshot) => {
+        const productsData = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setProducts(productsData);
+        // setIsLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
   // let data = state.products
-  console.log('data', products)
+  // console.log('data', products)
   console.log('cart', cart)
   return (
     <>

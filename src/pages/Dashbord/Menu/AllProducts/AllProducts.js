@@ -54,83 +54,8 @@ export default function AllProducts() {
   };
 
 
-  // const handleImageChange = (e) => {
-  //   if (e.target.files[0]) {
-  //     setImage(e.target.files[0]);
-  //     setUpdateProduct((prevState) => ({
-  //       ...prevState,
-  //       imageUrl: URL.createObjectURL(e.target.files[0]),
-  //     }));
-  //   }
-  // };
-   // Function to upload image to Firebase Storage
-  //  const uploadImageToStorage = async (file) => {
-  //   try {
-  //     const storageRef = ref(storage, `Product_images/${user.uid}`);
-  //     const uploadTask = uploadBytesResumable(storageRef, file);
-
-  //     await uploadTask.on(
-  //       'state_changed',
-  //       (snapshot) => {
-  //         // Handle progress if needed
-  //       },
-  //       (error) => {
-  //         console.error('Error uploading image:', error);
-  //       },
-  //       async () => {
-  //         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-  //         // Update the profile state with the image URL
-  //         setUpdateProduct((UpdateProduct) => ({
-  //           ...UpdateProduct,
-  //           image: downloadURL,
-  //         }));
-  //       }
-  //     );
-  //   } catch (error) {
-  //     console.error('Error uploading image:', error);
-  //   }
-  // };
-  // Function to handle image upload
-  // const handleImageUpload = async () => {
-  //   if (image) {
-  //     setisProcessing(true);
-  //     await uploadImageToStorage(image);
-  //     setisProcessing(false);
-  //   }
-  // };
+  
 // -----------------HANDLE UPDATED----------------
-// const handleUpdate = async () => {
-//   setisProcessing(true);
-//   try {
-//     const formData = {
-//       ...updateProduct,
-//       dateModified: serverTimestamp(),
-//       emailModified: {
-//         email: user.email,
-//         uid: user.uid,
-//       },
-//     };
-//     if (image) {
-//       // If there is a new image selected, upload it to storage and get the URL
-//       const storageRef = storage.ref();
-//       const imageRef = storageRef.child(`product_images/${image.name}`);
-//       await imageRef.put(image);
-//       const imageUrl = await imageRef.getDownloadURL();
-
-//       // Set the image URL in the formData before updating Firestore
-//       formData.image = imageUrl;
-//     }
-
-//     await setDoc(doc(firestore, "Products", formData.id), formData, { merge: true });
-//     // ---SET ACCORDING TO CALENDER SELECTION---
-   
-//     window.toastify("Todo has been updated successfully", "success");
-//   } catch (error) {
-//     console.error(error);
-//     window.toastify("Something went wrong! Todo isn't added", "error");
-//   }
-//   setisProcessing(null);
-// };
 const handleUpdate = async (e) => {
   e.preventDefault();
   setisProcessing(true);
@@ -164,7 +89,7 @@ const handleUpdate = async (e) => {
           // Update the Firestore document with the new formData
           await updateDoc(doc(firestore, "Products", formData.id), formData);
           window.toastify("Product has been updated successfully", "success");
-          setUpdateProduct({}); // Reset the updateProduct state to clear the form after successful update
+          // setUpdateProduct({}); // Reset the updateProduct state to clear the form after successful update
           setisProcessing(false);
         }
       );
@@ -172,7 +97,7 @@ const handleUpdate = async (e) => {
       // If no new image is selected, update the Firestore document with the existing formData
       await updateDoc(doc(firestore, "Products", formData.id), formData);
       window.toastify("Product has been updated successfully", "success");
-      setUpdateProduct({}); // Reset the updateProduct state to clear the form after successful update
+      // setUpdateProduct({}); // Reset the updateProduct state to clear the form after successful update
       setisProcessing(false);
     }
   } catch (error) {
@@ -258,7 +183,7 @@ const avatarIcon = updateProduct.image ? (
                             <Td colspan="" className="">
                               <span className="d-inline-block ps-1 ">{item.name}</span>
                             </Td>
-                            <Td className="my-auto">{item.title}$</Td>
+                            <Td className="my-auto">{item.title}</Td>
                             <Td className="">
                               {item.type}
                             </Td>
