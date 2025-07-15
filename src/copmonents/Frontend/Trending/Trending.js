@@ -88,12 +88,12 @@ export default function Trending() {
                   <div className="card bg-light text-center px-2 px-lg-4 py-5  border-0 shadow-sm  px-2 px-md-4 " >
                     <div className="row pt-4">
                       <h4 style={{ fontFamily: 'fantasy' }}>{product.title}</h4>
-                      <p>{product.description}</p>
+                      <p className='trend-descrption'>{product.description}</p>
                       <hr />
                       <div className="row">
                         <div className="col-5 text-start">
                           {/* <div className="card  rounded-5    " > */}
-                           <span className='text-start   bg-white rounded-5 py-2 px-4  d-inline-block  ' style={{ boxShadow: '0 0 25px rgb(235, 226, 226)' }}><b className='px-1'>{product.price}$</b></span>
+                           <span className='text-start   bg-white rounded-5 py-2 px-4  d-inline-block  ' style={{ boxShadow: '0 0 25px rgb(235, 226, 226)' }}><b className='px-1'>Rs{product.price}</b></span>
                           {/* </div> */}
                         </div>
                         <div className="col-7 text-end ">

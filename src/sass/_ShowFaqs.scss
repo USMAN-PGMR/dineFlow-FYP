@@ -1,0 +1,35 @@
+.show-faqs {
+    .faq-tabs {
+      .btn {
+        border-radius: 50px;
+        padding: 0.4rem 1.2rem;
+        font-weight: 500;
+        transition: 0.3s;
+  
+        &:hover {
+          transform: translateY(-2px);
+        }
+      }
+    }
+  
+    .accordion-button {
+      background-color: #fff5f5;
+      color: #dc3545;
+      font-size: 1rem;
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  
+    .accordion-body {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+  
+    .accordion-item {
+      border: none;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+  }
+  

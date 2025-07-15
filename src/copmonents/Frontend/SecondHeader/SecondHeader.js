@@ -148,6 +148,15 @@ export default function SecondHeader() {
                 <Link className="nav-link   fw-semibold mx-lg-2" aria-current="page" to='/'>Home</Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/allProducts'>Menu</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/jobs'>Jobs </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/faqs'>FAQ's </Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/about'>About</Link>
               </li>
               <li className="nav-item">

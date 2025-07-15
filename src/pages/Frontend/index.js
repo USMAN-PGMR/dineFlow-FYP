@@ -14,6 +14,8 @@ import MyOrder from './MyOrder'
 import Jobs from './Jobs'
 import AllProducts from './AllProducts'
 import Faqs from './Faqs'
+import PrivacyPolicy from './PrivacyPolicy'
+import TermsConditions from './TermsConditions'
 
 export default function Index() {
   const isAuthenticated = useContext(AuthContext)
@@ -33,6 +35,8 @@ export default function Index() {
         <Route path='allProducts' element={<AllProducts/>} />
         <Route path='jobs' element={<Jobs />} />
         <Route path='faqs' element={<Faqs />} />
+        <Route path='privacy' element={<PrivacyPolicy />} />
+        <Route path='terms' element={<TermsConditions />} />
         <Route path='*' element={<NoPage />} />
       </Routes>
       {/* </main> */}

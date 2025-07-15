@@ -1,54 +1,124 @@
 .flip-card {
-    background-color: transparent;
-    width: 190px;
-    height: 254px;
-    perspective: 1000px;
-    font-family: sans-serif;
-  }
-  
-  .title {
-    font-size: 1.5em;
-    font-weight: 900;
-    text-align: center;
-    margin: 0;
-  }
-  
-  .flip-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-  }
-  
-  .flip-card:hover .flip-card-inner {
-    transform: rotateY(180deg);
-  }
-  
-  .flip-card-front, .flip-card-back {
-    box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    border: 1px solid coral;
-    border-radius: 1rem;
-  }
-  
-  .flip-card-front {
-    background: linear-gradient(120deg, bisque 60%, rgb(255, 231, 222) 88%,
-       rgb(255, 211, 195) 40%, rgba(255, 127, 80, 0.603) 48%);
-    color: coral;
-  }
-  
-  .flip-card-back {
-    background: linear-gradient(120deg, rgb(255, 174, 145) 30%, coral 88%,
-       bisque 40%, rgb(255, 185, 160) 78%);
+  background-color: transparent;
+  width: 240px;
+  height: 320px;
+  perspective: 1000px;
+  font-family: 'Poppins', sans-serif;
+  display: inline-block;
+  vertical-align: top;
+  margin: 1rem;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.flip-card-front {
+  background-size: cover;
+  background-position: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  text-align: center;
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.price-tag {
+  background: #DC3545; // Your theme color
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  display: inline-block;
+}
+
+.flip-card-back {
+  background: linear-gradient(120deg, #DC3545 30%, #ffadad 88%, #fff0f0 40%);
+  color: #fff;
+  transform: rotateY(180deg);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  height: 165px;
+  overflow-y: auto;
+  text-overflow: ellipsis;
+  color: #fff;
+  padding-right: 5px; // thoda space scroll bar se
+  scrollbar-width: thin; // Firefox
+  scrollbar-color: #DC3545 transparent; // Firefox ke liye
+}
+
+/* Chrome, Edge, and Safari scrollbar */
+.description::-webkit-scrollbar {
+  width: 6px;
+}
+
+.description::-webkit-scrollbar-thumb {
+  background-color: #DC3545;
+  border-radius: 10px;
+}
+
+.discount {
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: #fff;
+  color: #DC3545; // your theme color
+  padding: 4px 10px;
+  border-radius: 10px;
+  display: inline-block;
+  width: fit-content;
+  // margin-bottom: 0.8rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.btn-card {
+  border-radius: 25px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 15px;
+  background-color: #fff;
+  color: #DC3545;
+  border: none;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #DC3545;
     color: white;
-    transform: rotateY(180deg);
   }
+}

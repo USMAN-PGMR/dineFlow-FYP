@@ -85,10 +85,10 @@ export default function AboutHeader() {
       <nav className="navbar secondNav navbar-expand-lg py-0  bg-transparent  ">
         <div className="container px-0 py-0 my-0 ">
           <Link to='/' className="navbar-brand mx-0   px-0" ><img className='w-75 ps-2 py-1  ' src={lightLogo} alt="" /></Link>
-         
+
           <div className="d-column align-items-end  justify-content-end  d-sm-block d-lg-none  ">
 
-            
+
 
             <Link to='/cart' className='btnbtnNavAbout text-decoration-none text-white py-0 px-0 mx-0 position-relative' >
               <span style={{ fontSize: '20px' }}>
@@ -149,6 +149,15 @@ export default function AboutHeader() {
             <ul className="navbar-nav me-auto   mb-2 mb-lg-0">
               <li className="nav-item ">
                 <Link className="nav-link   fw-semibold mx-lg-2" aria-current="page" to='/'>Home</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/allProducts'>Menu</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/jobs'>Jobs </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/faqs'>FAQ's </Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/about'>About</Link>

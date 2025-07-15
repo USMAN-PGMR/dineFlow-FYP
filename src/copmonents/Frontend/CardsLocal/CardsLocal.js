@@ -3,11 +3,11 @@ import { CartState } from '../../../context/CartContext';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { firestore } from '../../../config/firebase';
 
-// let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-
 export default function CardsLocal() {
-  const {state :{cart},dispatch} = CartState();
+  const { state: { cart }, dispatch } = CartState();
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -17,66 +17,86 @@ export default function CardsLocal() {
           ...doc.data(),
           id: doc.id,
         }));
+
         setProducts(productsData);
-        // setIsLoading(false);
+
+        const categoryList = ["All", ...new Set(productsData.map(p => p.category))];
+        setCategories(categoryList);
       }
     );
 
     return () => unsubscribe();
   }, []);
 
-  // let data = state.products
-  // console.log('data', products)
-  console.log('cart', cart)
+  const filteredProducts = selectedCategory === "All"
+    ? products
+    : products.filter(p => p.category === selectedCategory);
+
   return (
-    <>
-      <div>
-        {products.map((prod) => (
-          <div className="flip-card d-inline-block mx-5 my-5" prod={prod}
-            key={prod.id}
+    <div className="container pt-3">
+      <h1 className="text-center my-4" style={{ fontFamily: 'fantasy' }}>Our Products</h1>
+
+      {/* Category Buttons */}
+      <div className="d-flex flex-wrap gap-2 justify-content-center mb-4">
+        {categories.map((cat, idx) => (
+          <button
+            key={idx}
+            className={`btn ${selectedCategory === cat ? 'btn-danger' : 'btn-outline-danger'}`}
+            onClick={() => setSelectedCategory(cat)}
           >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Product Cards */}
+      <div className="row justify-content-center mt-3">
+        {filteredProducts.map((prod) => (
+          <div className="flip-card col-12 col-sm-6 col-md-4 col-lg-3 m-3" key={prod.id}>
             <div className="flip-card-inner">
               <div
                 className="flip-card-front"
-                style={{ backgroundImage: `url(${prod.image})` }}
-              >
-                <p className="price mt-3">
-                  {prod.price}
-                  </p>
-              </div>
-              <div className="flip-card-back">
-                <p className="title">
-                  {prod.title}
-                </p>
-                {
-                  cart.some(p=>p.id === prod.id)?(
-
-                <div className="btn btn-danger" onClick={()=>{
-                  dispatch({
-                    type:"REMOVE_FROM_CART",
-                    payload:prod,
-                  })
-                }} >
-                  Remove
-                </div>
-                  ):(
-
-                <div className="btn btn-primary" onClick={()=>{
-                  dispatch({
-                    type:"ADD_TO_CART",
-                    payload:prod,
-                  })
+                style={{
+                  backgroundImage: `url(${prod.image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
                 }}
-                >
-                  ADD
+              >
+                <div className="overlay">
+                  <h3 className="product-title">{prod.title}</h3>
+                  <p className="price-tag">Rs {prod.price}</p>
                 </div>
-                  )
-                }
+              </div>
+
+              <div className="flip-card-back d-flex flex-column justify-content-between p-3">
+                <div>
+                  <h5 className="product-title">{prod.title}</h5>
+                  <p className="description mt-2   rounded">
+                    {prod.description?.slice(0, 300) || "No description available."}
+                  </p>
+                  <p className="discount">Discount: Rs {prod.discount || 0}</p>
+                </div>
+
+                {cart.some(p => p.id === prod.id) ? (
+                  <button
+                    className="btn mt-auto btn-card"
+                    onClick={() => dispatch({ type: "REMOVE_FROM_CART", payload: prod })}
+                  >
+                    Remove from Cart
+                  </button>
+                ) : (
+                  <button
+                    className="btn mt-auto btn-card"
+                    onClick={() => dispatch({ type: "ADD_TO_CART", payload: prod })}
+                  >
+                    Add to Cart
+                  </button>
+                )}
               </div>
             </div>
           </div>
-          ))}  
+        ))}
       </div>
-    </>
+    </div>
   );
 }

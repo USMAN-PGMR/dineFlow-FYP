@@ -152,7 +152,7 @@ export default function Header() {
                 <Link className="nav-link active fw-semibold mx-lg-2" aria-current="page" to='/'>Home</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/allProducts'>All Items</Link>
+                <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/allProducts'>Menu</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link  fw-semibold mx-lg-2" aria-current="page" to='/jobs'>Jobs </Link>

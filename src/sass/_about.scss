@@ -1,5 +1,23 @@
+// about
 .aboutHero{
     background-image: url('../assets/aboutHeader.jpg'), linear-gradient(rgba(37, 37, 37, 0.74),rgba(37, 37, 37, 0.74)) ;
+    background-size: cover;
+background-position: center;
+
+background-blend-mode: overlay;
+}
+
+// appproducts
+.allProducts{
+    background-image: url('../assets/2\ \(1\).jpg'), linear-gradient(rgba(37, 37, 37, 0.74),rgba(37, 37, 37, 0.74)) ;
+    background-size: cover;
+background-position: center;
+
+background-blend-mode: overlay;
+}
+// jobs
+.jobsHero{
+    background-image: url('../assets/ourstory-bg.jpg'), linear-gradient(rgba(37, 37, 37, 0.74),rgba(37, 37, 37, 0.74)) ;
     background-size: cover;
 background-position: center;
 

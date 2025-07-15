@@ -8,7 +8,7 @@
 //       }
 .trending {
     // border: 1px solid red;
-    
+
     .splide {
         padding: 0 5rem;
     }
@@ -39,6 +39,7 @@
         width: 90vw;
 
         bottom: -15px;
+
         // right: 50%;
         // transform: translateX(50%);
         // z-index: 100;
@@ -60,7 +61,30 @@
                 // border: none; /* Remove border on focus */
             }
         }
+
+        
     }
+    .trend-descrption {
+        // font-size: 0.9rem;
+        // line-height: 1.4rem;
+        max-height: calc(1.2rem * 4);
+        overflow-y: auto;
+        // padding-right: 5px;
+        color: #333;
+      
+        scrollbar-width: thin;
+        scrollbar-color: #333 transparent;
+      
+        &::-webkit-scrollbar {
+          width: 5px;
+        }
+      
+        &::-webkit-scrollbar-thumb {
+          background-color: #333;
+          border-radius: 10px;
+        }
+      }
+      
 
     @media (max-width: 640px) {
         .splide {

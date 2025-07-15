@@ -1,0 +1,37 @@
+.show-jobs-page {
+    .job-card {
+      border-radius: 10px;
+      transition: all 0.3s ease-in-out;
+  
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+      }
+  
+      .job-img {
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+  
+      .btn {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+    }
+  
+    .modal-content {
+      border-radius: 12px;
+      padding: 1rem;
+  
+      .btn-close {
+        background-color: #ffeaea;
+      }
+  
+      .form-control {
+        border-radius: 8px;
+      }
+    }
+  }
+  

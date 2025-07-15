@@ -1,5 +1,6 @@
 import React from 'react'
 import logo from '../../../assets/logofooter.png'
+import { Link } from 'react-router-dom'
 export default function Footer() {
   return (
     <><div className="footer bg-light ">
@@ -15,78 +16,58 @@ export default function Footer() {
         </div>
         <div className="row mt-md-4 ">
           {/* information */}
-          <div className="col-12 col-md-6 col-lg-3 text-center text-lg-start pt-5">
-            <h5 style={{ fontFamily: 'fantasy' }}>Information</h5>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start ">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Home</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start ">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Blog</span>
-            </button>
-            <button className=" col-12 mt-2 custom-button text-center text-lg-start ">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>About Us</span>
-            </button>
-            <button className="col-12 mt-2 custom-button  text-center text-lg-start">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Menu</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Contact Us</span>
-            </button>
-
-          </div>
-          {/* top Items */}
-          <div className="col-12 col-md-6 col-lg-3 text-center text-lg-start pt-5">
-            <h5 style={{ fontFamily: 'fantasy' }}>Top Items</h5>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Peperoni</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Swiss Mushroom</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start ">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Barbeque Chicken</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Vegetarian</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start ">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Harm & Cheese</span>
-            </button>
-          </div>
-          {/* others */}
-          <div className="col-12 col-md-6 col-lg-3 text-center text-lg-start pt-5">
-            <h5 style={{ fontFamily: 'fantasy' }}>Others</h5>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Checkout</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Cart</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start ">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Product</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Locations</span>
-            </button>
-            <button className="col-12 mt-2 custom-button text-center text-lg-start ">
-              <span className="icon">&gt;</span>
-              <span className='btnText'>Legal</span>
-            </button>
-          </div>
+           <div className="col-12 col-md-5 text-center text-lg-start pt-5">
+                        <h5 style={{ fontFamily: 'fantasy' }}>Information</h5>
+          
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>Home</span>
+                        </Link>
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/allProducts">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>Menu</span>
+                        </Link>
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/faqs">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>FAQ's</span>
+                        </Link>
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/about">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>About us</span>
+                        </Link>
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/contact">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>Contact Us</span>
+                        </Link>
+          
+          
+                      </div>
+         
+           {/* others */}
+                      <div className="col-12 col-md-4  text-center text-lg-start pt-5">
+                        <h5 style={{ fontFamily: 'fantasy' }}>Others</h5>
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/checkout">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>Checkout</span>
+                        </Link>
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/cart">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>Cart</span>
+                        </Link>
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/allProducts">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>Products</span>
+                        </Link>
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/UserProfile">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>Profile</span>
+                        </Link>
+                        <Link className="nav-link col-12 mt-2 custom-button  text-center text-lg-start" to="/my-order">
+                          <span className="icon">&gt;</span>
+                          <span className='btnText'>Orders</span>
+                        </Link>
+          
+                      </div>
           {/* social media */}
           <div className="col-12 col-md-6 col-lg-3 text-center text-lg-start pt-5">
             <h5 style={{ fontFamily: 'fantasy' }}>Social Media</h5>
@@ -96,34 +77,26 @@ export default function Footer() {
             <span className=' ms-2 btn google d-inline-block  '><i className="fa-brands fa-google"></i></span>
             <span className=' ms-2 btn twitter d-inline-block  '><i className="fa-brands fa-twitter"></i></span>
             <p className='pt-2'>Signup and get exclusive offers and coupon codes</p>
-            <button className="zoom-button ">
+            <Link className="zoom-button nav-link " to='/auth/register'>
               Sign Up
               {/* <span className="zoom-overlay"></span> */}
-            </button>
+            </Link>
 
             {/* </div> */}
           </div>
         </div>
         <div className="row mt-5">
-          <div className="col mt-lg-4 text-center text-lg-start ">
+          <div className=" mt-lg-4 text-center text-lg-start ">
 
-            <div className="col-12 col-md-auto  btn btnPrivacy px-0">Privacy Policy</div>
-            <div className="col-12 col-md-auto btn btnPrivacy ">Refund Policy</div>
-            <div className="col-12 col-md-auto btn btnPrivacy ">Cookie Policy</div>
-            <div className="col-12 col-md-auto btn btnPrivacy ">Terms & Conditions</div>
+            <Link to="/privacy" className="col-12 col-md-auto btn btnPrivacy px-0">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="col-12 col-md-auto btn btnPrivacy px-lg-3">
+              Terms & Conditions
+            </Link>
 
           </div>
-          {/* <div className="col-12 px-0 mx-0 col-lg-2 text-center text-lg-start">
-          </div>
-          <div className="col-12 col-lg-2 text-center text-lg-start">
-          <div className="btn">Privacy Policy</div>
-          </div>
-          <div className="col-12 col-lg-2 text-center text-lg-start">
-          <div className="btn">Privacy Policy</div>
-          </div>
-          <div className="col-12 col-lg-2 text-center text-lg-start">
-          <div className="btn">Privacy Policy</div>
-          </div> */}
+          
 
         </div>
         <hr />
