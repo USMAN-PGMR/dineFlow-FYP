@@ -80,6 +80,8 @@ export default function Team() {
       await setDoc(doc(firestore, "Team", TeamData.id), TeamData);
       window.toastify("Team member has been added successfully", "success")
       setState(initialState)
+      setImage(null);
+
       // clearInput()
     } catch (err) {
       console.error(err)

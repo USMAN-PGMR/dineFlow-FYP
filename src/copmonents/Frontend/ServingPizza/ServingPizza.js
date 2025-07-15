@@ -1,5 +1,6 @@
 import React from 'react'
 import signature from '../../../assets/signature.png'
+import { Link } from 'react-router-dom'
 export default function ServingPizza() {
     return (
         <div className="container">
@@ -18,9 +19,9 @@ export default function ServingPizza() {
                         <img className='w-auto img-fluid' src={signature} alt="signature" />
                     </div>
                     <div className="row pb-5 ">
-                        <button className="zoom-button w-auto px-3 px-lg-4 ms-2  py-3 bg-danger fw-semibold mt-3" style={{ boxShadow: "0 0 25px rgb(255, 168, 168)" }}>
+                        <Link to='/allProducts' className="zoom-button nav-link w-auto px-3 px-lg-4 ms-2  py-3 bg-danger fw-semibold mt-3" style={{ boxShadow: "0 0 25px rgb(255, 168, 168)" }}>
                             CHECK OUR MENU
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

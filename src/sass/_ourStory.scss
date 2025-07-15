@@ -5,3 +5,17 @@ background-position: center;
 background-attachment: fixed; 
 background-blend-mode: overlay;
 }
+
+
+.modal-content {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .modal-body .card-img-top {
+    height: 220px;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
