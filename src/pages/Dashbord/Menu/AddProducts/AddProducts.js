@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import { AuthContext } from '../../../../context/AuthContext'
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
 import { firestore, storage } from '../../../../config/firebase'
-import { Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import {  ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar } from 'antd';
 // import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 

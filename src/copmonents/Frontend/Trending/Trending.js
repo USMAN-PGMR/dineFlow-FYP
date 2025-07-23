@@ -1,6 +1,6 @@
 import { SplideTrack, Splide, SplideSlide } from '@splidejs/react-splide'
 import React, { useEffect, useState } from 'react';
-import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 
 // import productData from '../../../config/productData';
 import { firestore } from '../../../config/firebase';
@@ -42,8 +42,7 @@ export default function Trending() {
 
         </div>
         <div className="col-md-6 offset-md-3 text-center mt-2">
-          <p className='text-secondary'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy</p>
-        </div>
+          <p className='text-secondary'>Discover the most loved dishes chosen by our customers! These favorites are crafted with the finest ingredients and prepared fresh to satisfy your cravings every time. Dive into the flavors that keep everyone coming back for more.</p>        </div>
       </div>
       {isLoading ? (
        <div className="text-center">

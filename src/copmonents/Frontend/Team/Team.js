@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { getDocs, collection } from 'firebase/firestore';
+import { doc, getDoc, getDocs, collection } from 'firebase/firestore';
 import { firestore } from '../../../config/firebase'; // update path if needed
 
 export default function Team() {
   const [showModal, setShowModal] = useState(false);
   const [teamMembers, setTeamMembers] = useState([]);
+  // team paragraph 
+  const [TeamSection, setTeamSection] = useState([]);
   const activeTeamMembers = teamMembers.filter(member => member.status === 'active');
 
 
@@ -22,19 +24,35 @@ export default function Team() {
   useEffect(() => {
     fetchTeamMembers();
   }, []);
+// team section description
+useEffect(() => {
+        const fetchTeamSection = async () => {
+            try {
+                const TeamSection = await getDoc(doc(firestore, 'About', 'TeamSection'));
+                if (TeamSection.exists()) {
+                    const data = TeamSection.data();
+                    //   setAboutHeading(data.heading || '');
+                    setTeamSection(data.paragraphs || []);
+                }
+            } catch (err) {
+                console.error('Failed to load team description data:', err);
+            }
+        };
 
+        fetchTeamSection();
+    }, []);
   return (
     <div className="container pt-5">
       <div className="row py-5">
         <div className="col-12 col-lg-6 d-flex flex-column justify-content-center">
           <h5 className='text-danger py-2' style={{ fontFamily: 'fantasy' }}>Our Backbone</h5>
           <h1 className='py-2' style={{ fontFamily: 'fantasy' }}>Meet The Team</h1>
-          <p className='text-secondary' style={{ fontSize: '18px' }}>
-          At DineFlow, we’re more than just a restaurant management solution. we’re a team of innovators, creators, and food enthusiasts working together to transform how restaurants operate. Each member of our team brings unique skills and passion to the table, ensuring that every feature we build serves a purpose and makes life easier for restaurant owners and staff. 
-          </p>
-          <p className='text-secondary' style={{ fontSize: '18px' }}>
-          From developers and designers to support and strategy, our backbone is a dedicated team committed to delivering smooth, smart, and scalable dining experiences.
-          </p>
+          {TeamSection.map((para, index) => (
+                                <p key={index} className='text-secondary'  style={{ fontSize: '18px' }}>
+                                    {para}
+                                </p>
+                            ))}
+         
           <div className="row pb-5">
             <button
               className="zoom-button w-auto px-3 px-lg-4 ms-2 py-3 bg-danger fw-semibold mt-3"
@@ -49,7 +67,7 @@ export default function Team() {
         {/* --- Firebase team members shown here (outside modal) --- */}
         <div className="col-12 col-lg-6">
           <div className="row">
-            {activeTeamMembers.map((member, index) => (
+            {activeTeamMembers.slice(0, 4).map((member, index) => (
               <div className="col-12 col-md-6 mt-4" key={index}>
                 <div className="card bg-light border-0 text-center">
                   <img className='w-100 rounded-top' src={member.image} alt={member.fullName} />

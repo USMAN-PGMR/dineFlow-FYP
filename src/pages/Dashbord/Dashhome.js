@@ -76,7 +76,7 @@ const getRandomId = () => Math.random().toString(36).slice(2)
     {
       key: getRandomId(),
       icon: <MdContactPhone style={{fontSize:'20px'}} />,
-      label: <Link to='/dashbord/home/contactManage' className='text-decoration-none'>Contact</Link>,
+      label: <Link to='/dashbord/home/contactManage' className='text-decoration-none'>General Settings</Link>,
     },
     {
       key: getRandomId(),
