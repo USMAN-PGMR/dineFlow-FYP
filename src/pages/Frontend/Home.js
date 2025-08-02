@@ -117,7 +117,9 @@ export default function Home() {
         <Greatoffer/>
         <Testimonial/>
         {/* News Letters */}
-        <NewsLetter />
+        <br />
+        <br />
+        {/* <NewsLetter /> */}
         {/* footer */}
 
         <Footer />
