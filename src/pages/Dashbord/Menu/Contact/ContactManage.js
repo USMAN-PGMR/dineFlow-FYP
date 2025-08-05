@@ -6,6 +6,14 @@ import { Link } from 'react-router-dom';
 export default function ContactManage() {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  // payment info -> Bank account
+  const [payment, setPayment] = useState({
+    accountTitle: '',
+    accountNumber: '',
+    type: '',
+  });
+
+
 
   // Contact -> Find Us
   const [findUs, setFindUs] = useState({
@@ -34,6 +42,10 @@ export default function ContactManage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // payment info
+        const paymentSnap = await getDoc(doc(collection(firestore, 'PaymentInfo'), 'BankAccount'));
+        if (paymentSnap.exists()) setPayment(paymentSnap.data());
+
         // Contact
         const findUsSnap = await getDoc(doc(collection(firestore, 'Contact'), 'FindUs'));
         const hoursSnap = await getDoc(doc(collection(firestore, 'Contact'), 'Hours'));
@@ -63,6 +75,13 @@ export default function ContactManage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      // payment info
+      await setDoc(doc(collection(firestore, 'PaymentInfo'), 'BankAccount'), {
+        accountTitle: payment.accountTitle,
+        accountNumber: payment.accountNumber,
+        type: payment.type,
+      });
+
       // Contact
       await setDoc(doc(collection(firestore, 'Contact'), 'FindUs'), findUs);
       await setDoc(doc(collection(firestore, 'Contact'), 'Hours'), hours);
@@ -81,7 +100,7 @@ export default function ContactManage() {
         paragraphs: teamParagraphs,
       });
 
-      window.toastify('Changes saved successfully!');
+      window.toastify('Changes saved successfully!','success');
     } catch (err) {
       console.error(err);
       window.toastify('Error saving data', 'error');
@@ -224,6 +243,43 @@ export default function ContactManage() {
                     />
                   ))}
                   <button className="btn btn-outline-secondary btn-sm rounded-pill" onClick={() => addParagraph(setTeamParagraphs)}>+ Add Paragraph</button>
+                </div>
+                {/* payment accont details */}
+                <h6 className="text-success fw-semibold mt-4">💳 Payment Account Details</h6>
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label fw-semibold">Account Title</label>
+                    <input
+                      type="text"
+                      className="form-control shadow-sm"
+                      placeholder="e.g. Usman Ali"
+                      value={payment.accountTitle}
+                      onChange={(e) => setPayment((prev) => ({ ...prev, accountTitle: e.target.value }))}
+                    />
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label fw-semibold">Account Number</label>
+                    <input
+                      type="text"
+                      className="form-control shadow-sm"
+                      placeholder="e.g. 03001234567"
+                      value={payment.accountNumber}
+                      onChange={(e) => setPayment((prev) => ({ ...prev, accountNumber: e.target.value }))}
+                    />
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label fw-semibold">Account Type</label>
+                    <select
+                      className="form-select shadow-sm"
+                      value={payment.type}
+                      onChange={(e) => setPayment((prev) => ({ ...prev, type: e.target.value }))}
+                    >
+                      <option value="">Select Type</option>
+                      <option value="Easypaisa">Easypaisa</option>
+                      <option value="JazzCash">JazzCash</option>
+                      <option value="Bank">Bank</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div className="text-end mt-3">

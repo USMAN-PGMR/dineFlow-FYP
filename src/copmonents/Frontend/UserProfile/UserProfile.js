@@ -186,7 +186,7 @@ export default function UserProfile() {
                                                 </div>
                                                 <div className="col-12 col-lg-6">
                                                     <label for="email" className='fw-semibold py-2'>Email <span className='fw-lighter text-danger' style={{ fontSize: '11px' }}>(email can't be change) </span> </label>
-                                                    <input type="email" name='email' className='form-control py-2' placeholder='Email ' value={profile.email} onChange={handleChange} />
+                                                    <input disabled type="email" name='email' className='form-control py-2' placeholder='Email ' value={profile.email} onChange={handleChange} />
                                                 </div>
                                             </div>
                                             <div className="row pt-2 ">

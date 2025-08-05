@@ -1,0 +1,127 @@
+.stat-card {
+    position: relative;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.2s ease;
+  
+    &:hover {
+      transform: translateY(-4px);
+    }
+  
+    .card-content {
+      position: relative;
+      z-index: 2;
+    }
+  
+    .icon {
+      font-size: 2rem;
+      margin-right: 1rem;
+    }
+  
+    // Common styles for border animation
+    .border-anim {
+      position: absolute;
+      z-index: 1;
+      background: transparent;
+    }
+  
+    // Individual sides
+    .top {
+      height: 2px;
+      width: 0%;
+      top: 0;
+      left: 0;
+      animation: animate-top 6s linear infinite;
+    }
+  
+    .right {
+      width: 2px;
+      height: 0%;
+      top: 0;
+      right: 0;
+      animation: animate-right 6s linear infinite;
+      animation-delay: 1.5s;
+    }
+  
+    .bottom {
+      height: 2px;
+      width: 0%;
+      bottom: 0;
+      right: 0;
+      animation: animate-bottom 6s linear infinite;
+      animation-delay: 3s;
+    }
+  
+    .left {
+      width: 2px;
+      height: 0%;
+      bottom: 0;
+      left: 0;
+      animation: animate-left 6s linear infinite;
+      animation-delay: 4.5s;
+    }
+  
+    // Per-color gradients
+    &.color-primary .border-anim { background: linear-gradient(90deg, #0d6efd, #6ea8fe); }
+    &.color-secondary .border-anim { background: linear-gradient(90deg, #6c757d, #adb5bd); }
+    &.color-success .border-anim { background: linear-gradient(90deg, #198754, #71d7b2); }
+    &.color-danger .border-anim { background: linear-gradient(90deg, #dc3545, #f394a0); }
+    &.color-warning .border-anim { background: linear-gradient(90deg, #ffc107, #ffe99d); }
+    &.color-info .border-anim { background: linear-gradient(90deg, #0dcaf0, #86e5f9); }
+    &.color-dark .border-anim { background: linear-gradient(90deg, #212529, #6c757d); }
+  }
+  @keyframes animate-top {
+    0% { width: 0%; }
+    25% { width: 100%; }
+    100% { width: 100%; }
+  }
+  
+  @keyframes animate-right {
+    0% { height: 0%; }
+    25% { height: 100%; }
+    100% { height: 100%; }
+  }
+  
+  @keyframes animate-bottom {
+    0% { width: 0%; }
+    25% { width: 100%; }
+    100% { width: 100%; }
+  }
+  
+  @keyframes animate-left {
+    0% { height: 0%; }
+    25% { height: 100%; }
+    100% { height: 100%; }
+  }
+
+  
+
+// border k colors==============  custom color
+// Custom orange border animation
+.stat-card.color-pending .border-anim {
+    background: linear-gradient(90deg, #ff6f00, #ffa726); // Deep orange
+  }
+
+  
+
+  // Custom blue-purple gradient for Jobs / Vacancies
+.stat-card.color-vacancy .border-anim {
+    background: linear-gradient(90deg, #5e35b1, #7e57c2); // Deep violet tones
+  }
+  
+
+
+//   card ko as a link hover--------------------
+.stat-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+  

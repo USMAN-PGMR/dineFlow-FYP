@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../../config/firebase';
+import { Link } from 'react-router-dom';
 
 export default function TopBar() {
     const [phone, setPhone] = useState('');
@@ -29,7 +30,7 @@ export default function TopBar() {
       <span> {phone}</span>
     </span>
     <div className="d-flex">
-    <div className="btn btn-danger rounded-0 py-2 px-2 fw-semibold   " style={{fontSize:'15px'}}> <span className='mt-1 d-inline-block'>Order Now</span> </div>
+    <Link to='/allProducts' className="btn btn-danger rounded-0 py-2 px-2 fw-semibold   " style={{fontSize:'15px'}}> <span className='mt-1 d-inline-block'>Order Now</span> </Link>
 
     </div>
   </div>

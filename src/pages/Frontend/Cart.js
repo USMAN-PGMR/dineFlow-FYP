@@ -14,24 +14,26 @@ export default function Cart() {
     const taxRate = 0.07; // Assuming tax rate is 7%, change it accordingly
 
     const calculateTotalPrice = (item) => {
-        return (item.price * item.qty).toFixed(2);
+        return Math.round(item.price * item.qty);
     };
+    
 
     const calculateCartTotal = () => {
         let subtotal = 0;
         cart.forEach((item) => {
             subtotal += parseFloat(calculateTotalPrice(item));
         });
-
+    
         const tax = subtotal * taxRate;
         const total = subtotal + tax;
-
+    
         return {
-            subtotal: subtotal.toFixed(2),
-            tax: tax.toFixed(2),
-            total: total.toFixed(2),
+            subtotal: Math.round(subtotal),   // No decimal
+            tax: Math.round(tax),
+            total: Math.round(total),
         };
     };
+    
 
     const cartTotal = calculateCartTotal();
     // ----------------------
@@ -102,7 +104,7 @@ export default function Cart() {
                                                 
                                                 
                                                 </Td>
-                                                <Td className="my-auto">{item.price}$</Td>
+                                                <Td className="my-auto">{item.price}</Td>
                                                 
                                                 <Td className="">
                                                 <div className="qty">
@@ -121,7 +123,7 @@ export default function Cart() {
                                                 <span className="qty-add" onClick={() => dispatch({ type: "INCREMENT", payload: { id: item.id } })}><i class="fa-solid fa-plus"></i></span>
                                                 </div>
                                                 </Td>
-                                                <Td className="TOTAL">{calculateTotalPrice(item)}$</Td>
+                                                <Td className="TOTAL">RS {calculateTotalPrice(item)}</Td>
                                                 </Tr>
                                                 ))}
 
@@ -156,11 +158,11 @@ export default function Cart() {
                                 {/* <hr className='pb-0 mb-0' /> */}
                             </div>
                             <div className="col-8 bg-light  pt-3">
-                                <p className='SUBJECT' >{cartTotal.subtotal}$</p>
+                                <p className='SUBJECT' >RS {cartTotal.subtotal}</p>
                                 <hr />
-                                <p className='TEX' >{cartTotal.tax}$</p>
+                                <p className='TEX' >RS {cartTotal.tax}</p>
                                 <hr />
-                                <h6 className='CART_TOTAL' style={{ fontFamily: 'fantasy' }}>{cartTotal.total}$</h6>
+                                <h6 className='CART_TOTAL' style={{ fontFamily: 'fantasy' }}>RS {cartTotal.total}</h6>
                                 {/* <hr className='pb-0 mb-0' /> */}
                             </div>
                             <div className="col-12 my-4">
